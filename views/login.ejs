@@ -1,0 +1,77 @@
+<%- include("partials/header.ejs", {css: css}) %> 
+<div class="card">
+  <div class="tabs">
+    <button class="tab active" id="tab-login" onclick="show('login')">Sign in</button>
+    <button class="tab" id="tab-signup" onclick="show('signup')">Create account</button>
+  </div>
+ 
+  <div class="body">
+ 
+    <!-- Login panel -->
+    <div class="panel active" id="panel-login">
+      <p class="logo">Welcome back.</p>
+      <p class="sub">Sign in to your account to continue.</p>
+ 
+      <div id="flash-login"></div>
+ 
+      <form action="/login" method="POST">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="you@example.com" required />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="••••••••" required />
+        </div>
+        <button class="btn" type="submit">Sign in</button>
+      </form>
+ 
+      <p class="footer">No account? <a href="#" onclick="show('signup');return false">Create one →</a></p>
+    </div>
+ 
+    <!-- Signup panel -->
+    <div class="panel" id="panel-signup">
+      <p class="logo">Join us.</p>
+      <p class="sub">Create your free account in seconds.</p>
+ 
+      <div id="flash-signup"></div>
+ 
+      <form action="/signup" method="POST">
+        <div class="row">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Alex" required />
+          </div>
+          <div class="field" style="align-self:end">
+            <label>&nbsp;</label>
+            <input type="text" name="surname" placeholder="Kim (optional)" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="you@example.com" required />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" id="pw" placeholder="Min. 8 characters"
+                 required oninput="strength(this.value)" />
+          <div class="bars">
+            <div class="bar" id="b1"></div>
+            <div class="bar" id="b2"></div>
+            <div class="bar" id="b3"></div>
+            <div class="bar" id="b4"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Confirm password</label>
+          <input type="password" name="confirm" placeholder="••••••••" required />
+        </div>
+        <button class="btn" type="submit">Create account</button>
+      </form>
+ 
+      <p class="footer">Already have one? <a href="#" onclick="show('login');return false">Sign in →</a></p>
+    </div>
+ 
+  </div>
+</div>
+<%- include("partials/footer.ejs") %>

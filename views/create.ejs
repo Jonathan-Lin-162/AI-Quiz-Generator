@@ -1,0 +1,13 @@
+<%- include("partials/header.ejs", {css: css}) %> 
+<div class="chat-input-row">
+    <textarea
+          class="chat-input"
+          id="chatInput"
+          rows="1"
+          placeholder="Any topic you want to generate quiz"
+          onkeydown="handleChatKey(event)"
+          oninput="autogrow(this)"
+    ></textarea>
+    <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()">➤</button>
+</div>
+<%- include("partials/footer.ejs") %>

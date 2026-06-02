@@ -1,0 +1,142 @@
+/* --- Header Layout Container --- */
+header {
+  display: flex;
+  justify-content: space-between; /* Pushes Logo, Links, and Auth to their spots */
+  align-items: center;
+  padding: 15px 40px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Soft bottom shadow */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Keeps header on top when scrolling */
+}
+
+/* --- Logo Styling --- */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Space between logo image and text */
+}
+
+/* --- Base Navigation List Reset --- */
+header ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 30px; /* Space between links */
+}
+
+/* --- General Link Styling --- */
+header ul li a {
+  text-decoration: none;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+header ul li a:hover {
+  color: hsl(261deg 80% 48%); /* Matches your "About" button purple */
+}
+
+/* --- Authentication Buttons --- */
+.auth-btn {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* Login Link style (Looks like a clean link/subtle button) */
+header ul li a[href="/login"] {
+  color: #555555;
+}
+header ul li a[href="/login"]:hover {
+  color: #000000;
+}
+
+/* Signup Button Style */
+.auth-btn.signup {
+  background-color: #000000;
+  color: #ffffff !important;
+  border: 1px solid #000000;
+}
+
+.auth-btn.signup:hover {
+  background-color: #ffffff;
+  color: #000000 !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Logout Button Style */
+.auth-btn.logout {
+  background-color: transparent;
+  color: #dc3545 !important; /* Elegant warning red */
+  border: 1px solid #dc3545;
+}
+
+.auth-btn.logout:hover {
+  background-color: #dc3545;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+}
+
+/* From Uiverse.io by adamgiebl */
+.cssbuttons-io-button {
+  margin: 100px auto;
+  background: #a370f0;
+  color: white;
+  font-family: inherit;
+  padding: 0.35em;
+  padding-left: 1.2em;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 0.9em;
+  border: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 0 1.6em -0.6em #714da6;
+  overflow: hidden;
+  position: relative;
+  height: 2.8em;
+  padding-right: 3.3em;
+  cursor: pointer;
+}
+
+.cssbuttons-io-button .icon {
+  background: white;
+  margin-left: 1em;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2em;
+  width: 2.2em;
+  border-radius: 0.7em;
+  box-shadow: 0.1em 0.1em 0.6em 0.2em #7b52b9;
+  right: 0.3em;
+  transition: all 0.3s;
+}
+
+.cssbuttons-io-button:hover .icon {
+  width: calc(100% - 0.6em);
+}
+
+.cssbuttons-io-button .icon svg {
+  width: 1.1em;
+  transition: transform 0.3s;
+  color: #7b52b9;
+}
+
+.cssbuttons-io-button:hover .icon svg {
+  transform: translateX(0.1em);
+}
+
+.cssbuttons-io-button:active .icon {
+  transform: scale(0.95);
+}

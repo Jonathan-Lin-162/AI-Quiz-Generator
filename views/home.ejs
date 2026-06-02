@@ -1,0 +1,10 @@
+<%- include("partials/header.ejs", {css: css}) %> 
+<h1 class="welcome-message">Welcome!</h1>
+<h4 class="subtitle">Let's create some quizzes!</h4>
+<!-- From Uiverse.io by CristianMontoya98 --> 
+<div class="create-btn-container">
+    <form action="/create" method="GET">
+        <button class="create-btn"> Create</button>
+    </form>
+</div>
+<%- include("partials/footer.ejs") %>
