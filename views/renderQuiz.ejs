@@ -1,0 +1,44 @@
+<%- include("partials/header.ejs", {css: css}) %> 
+<div class="quiz-view-container">
+    
+    <!-- Active Quiz Area -->
+    <div id="quiz-active-box">
+        <!-- Progress System -->
+        <div class="progress-wrapper">
+            <span id="progress-text">Question 1 of 10</span>
+            <div class="progress-bar-bg">
+                <div id="progress-bar-fill"></div>
+            </div>
+        </div>
+
+        <!-- Question Title -->
+        <h4 id="question-text">Question placeholder text goes here?</h4>
+
+        <!-- Options Container -->
+        <div id="options-container"></div>
+
+        <!-- Real-time Answer Feedback Box -->
+        <div id="feedback-panel" class="hidden">
+            <h3 id="feedback-status"></h3>
+            <p id="feedback-explanation"></p>
+        </div>
+
+        <!-- Navigation Buttons Layout -->
+        <div class="navigation-controls">
+            <button id="prev-btn" class="nav-btn" disabled>Previous</button>
+            <button id="next-btn" class="nav-btn hidden">Next Question</button>
+        </div>
+    </div>
+
+    <!-- Final Summary Results Area (Hidden Initially) -->
+    <div id="quiz-results-box" class="hidden">
+        <h2>Quiz Completed!</h2>
+        <div id="score-summary"></div>
+        <hr>
+        <h3>Review your attempts:</h3>
+        <div id="summary-cards-container"></div>
+        <button class="create-btn" onclick="window.location.href='/home'">Back to Home</button>
+    </div>
+
+</div>
+<%- include("partials/footer.ejs") %>

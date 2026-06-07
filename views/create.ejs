@@ -1,13 +1,66 @@
 <%- include("partials/header.ejs", {css: css}) %> 
-<div class="chat-input-row">
+
+<div class="preference-settings" id="preference-settings">
+    <label for="difficulty">Choose difficulty level: </label>
+    <div class="select-wrapper">
+    <select name="difficulty" id="mode">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+    </select>
+    <i class="fa-solid fa-chevron-down" id="first-dropdown"></i>
+    </div>
+
+    <div class="select-wrapper">
+    <label for="time">Time for a quiz: </label>
+    <select name="time" id="time">
+        <option value="10">10s</option>
+        <option value="15">15s</option>
+        <option value="20">20s</option>
+        <option value="25">25s</option>
+        <option value="30">30s</option>
+        <option value="35">35s</option>
+        <option value="40">40s</option>
+        <option value="45">45s</option>
+        <option value="50">50s</option>
+        <option value="55">55s</option>
+        <option value="60">60s</option>
+    </select>
+    <i class="fa-solid fa-chevron-down" id="second-dropdown"></i>
+    </div>
+    <label>Number of Quizzes: </label>
+    <div>
+        <input 
+            type="number" 
+            name="quizNumber" 
+            class="quiz-number" 
+            id="quiz-number" 
+            placeholder="Enter number of questions"
+            min="1"
+            onkeydown="return event.keyCode !== 69 && event.keyCode !== 190 && event.keyCode !== 189 && event.keyCode !== 187"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+            >
+
+    </div>
+    <label>Question Type:</label>
+    <select class="quiz-type" id="quiz-type">
+        <option value="multiple-choice">Multiple Choice Only</option>
+        <option value="true-false">True / False Only</option>
+        <option value="mix" selected>Mix of Both Types</option>
+    </select>
+</div>
+
+<div class="text-input-row">
     <textarea
-          class="chat-input"
-          id="chatInput"
+          class="text-input"
+          id="textInput"
           rows="1"
           placeholder="Any topic you want to generate quiz"
           onkeydown="handleChatKey(event)"
           oninput="autogrow(this)"
     ></textarea>
-    <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()">➤</button>
+    <button class="text-send-btn" id="textSentBtn" onclick="generateQuiz()">➤</button>
 </div>
-<%- include("partials/footer.ejs") %>
+
+<div class="quiz-container" id="quiz-container"></div>
+<%- include("partials/footer.ejs", {js: js}) %>

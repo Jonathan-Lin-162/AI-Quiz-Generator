@@ -1,0 +1,122 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.quiz-view-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* --- Progress Bar --- */
+.progress-wrapper {
+  margin-bottom: 24px;
+}
+#progress-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+}
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background-color: #eef0f5;
+  border-radius: 4px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+#progress-bar-fill {
+  width: 0%; /* Dynamic */
+  height: 100%;
+  background: linear-gradient(45deg, #000000, hsl(261deg 80% 48%));
+  transition: width 0.3s ease;
+}
+
+/* --- Option Cards --- */
+.option-item {
+  width: 100%;
+  padding: 14px 20px;
+  margin: 10px 0;
+  background: #fafafa;
+  border: 2px solid #eef0f5;
+  border-radius: 10px;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.option-item:hover:not([disabled]) {
+  background: #ffffff;
+  border-color: #d1d5db;
+}
+
+/* --- Interactive Feedback Colors --- */
+.option-item.correct {
+  background-color: #d4edda !important;
+  border-color: #28a745 !important;
+  color: #155724 !important;
+}
+.option-item.incorrect {
+  background-color: #f8d7da !important;
+  border-color: #dc3545 !important;
+  color: #721c24 !important;
+}
+
+#feedback-panel {
+  padding: 16px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+#feedback-panel.correct-style {
+  background: #e6f4ea;
+  border-left: 5px solid #28a745;
+}
+#feedback-panel.incorrect-style {
+  background: #fce8e6;
+  border-left: 5px solid #dc3545;
+}
+
+/* --- Summary Panel Styling --- */
+.summary-card {
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  border: 1px solid #eef0f5;
+}
+.summary-card.passed {
+  border-left: 6px solid #28a745;
+  background: #fafdfb;
+}
+.summary-card.failed {
+  border-left: 6px solid #dc3545;
+  background: #fffbfa;
+}
+
+/* --- Utility Visibility classes --- */
+.hidden {
+  display: none !important;
+}
+.navigation-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.nav-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: white;
+}
+
+.create-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: white;
+}

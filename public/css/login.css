@@ -7,19 +7,20 @@
 }
 
 :root {
-  --bg: #0d0d0d;
-  --surface: #161616;
-  --border: rgba(255, 255, 255, 0.08);
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --border: rgba(0, 0, 0, 0.08);
   --border2: rgba(255, 255, 255, 0.18);
-  --text: #f0ece4;
+  --text: #848484;
   --muted: #7a7672;
-  --accent: #c9b99a;
+  --btn: rgb(255, 255, 255);
+  --accent: hsl(261deg 80% 48%);
   --danger: #e06c6c;
   --success: #6cc48a;
 }
 
-body {
-  min-height: 100vh;
+.main {
+  min-height: 90vh;
   background: var(--bg);
   display: flex;
   align-items: center;
@@ -41,6 +42,8 @@ body::before {
 
 .card {
   position: relative;
+  display: flex;
+  flex-direction: column;
   z-index: 1;
   width: 100%;
   max-width: 400px;
@@ -48,6 +51,16 @@ body::before {
   border: 1px solid var(--border);
   border-radius: 16px;
   overflow: hidden;
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover {
+  transform: translateY(-6px); /* Elevates the box card upward slightly */
+  box-shadow:
+    0 20px 30px -10px rgba(0, 0, 0, 0.06),
+    0 10px 15px -5px rgba(108, 43, 217, 0.03); /* Adds a soft violet depth shadow shadow glow */
 }
 
 /* top accent line */
@@ -175,11 +188,12 @@ body::before {
 }
 
 .btn {
+  display: block;
   width: 100%;
   margin-top: 0.5rem;
-  padding: 11px;
+  padding: 14px 20px;
   background: var(--accent);
-  color: #0d0d0d;
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -187,15 +201,20 @@ body::before {
   font-family: "DM Sans", sans-serif;
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition:
-    opacity 0.2s,
-    transform 0.1s;
+  transition: all 0.4s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .btn:hover {
-  opacity: 0.88;
+  background: var(--accent);
+  color: var(--btn);
+  opacity: 0.95;
+  filter: brightness(1.1);
+  transform: translateY(-1px);
 }
 .btn:active {
-  transform: scale(0.98);
+  transform: translateY(1px) scale(0.99);
 }
 
 .panel {
