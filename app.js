@@ -29,10 +29,12 @@ app.get("/home", (req, res) => {
 app.get("/login", (req, res) => {
   res.render("login", {
     css: ["login", "header"],
-    js: [],
+    js: ["loginSignup"],
     user: user,
   });
 });
+
+app.get("/signup", (req, res) => {});
 
 app.get("/create", (req, res) => {
   res.render("create", {

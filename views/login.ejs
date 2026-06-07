@@ -2,29 +2,31 @@
 <div class="main">
 <div class="card">
   <div class="tabs">
-    <button class="tab active" id="tab-login" onclick="show('login')">Sign in</button>
+    <button class="tab active" id="tab-signin" onclick="show('signin')">Login</button>
     <button class="tab" id="tab-signup" onclick="show('signup')">Create account</button>
   </div>
  
   <div class="body">
  
     <!-- Login panel -->
-    <div class="panel active" id="panel-login">
-      <p class="logo">Welcome back.</p>
-      <p class="sub">Sign in to your account to continue.</p>
+    <div class="panel active" id="panel-signin">
+      <p class="logo">Welcome back to StudySpark AI!</p>
+      <p class="sub">Sign in to power up your study notes.</p>
  
-      <div id="flash-login"></div>
+      <div id="flash-signin"></div>
  
       <form action="/login" method="POST">
         <div class="field">
           <label>Email</label>
-          <input type="email" name="email" placeholder="you@example.com" required />
+          <input type="email" name="email" placeholder="you@example.com" autocomplete="new-password" required />
         </div>
         <div class="field">
           <label>Password</label>
-          <input type="password" name="password" placeholder="••••••••" required />
+          <input id="signin-pw" type="password" name="password" placeholder="Your Password" autocomplete="new-password" required />
+          <i class="fas fa-eye eye-open-signin" id="eye-open-signin" style="display: none;"></i>
+          <i class="fas fa-eye-slash eye-closed-signin" id="eye-closed-signin"></i>
         </div>
-        <button class="btn" type="submit">Sign in</button>
+        <button class="btn" type="submit">Login</button>
       </form>
  
       <p class="footer">No account? <a href="#" onclick="show('signup');return false">Create one →</a></p>
@@ -32,30 +34,26 @@
  
     <!-- Signup panel -->
     <div class="panel" id="panel-signup">
-      <p class="logo">Join us.</p>
+      <p class="logo">Join StudySpark AI!</p>
       <p class="sub">Create your free account in seconds.</p>
  
       <div id="flash-signup"></div>
  
       <form action="/signup" method="POST">
-        <div class="row">
           <div class="field">
             <label>Name</label>
-            <input type="text" name="name" placeholder="Alex" required />
+            <input type="text" name="name" placeholder="Your Name" required />
           </div>
-          <div class="field" style="align-self:end">
-            <label>&nbsp;</label>
-            <input type="text" name="surname" placeholder="Kim (optional)" />
-          </div>
-        </div>
         <div class="field">
           <label>Email</label>
-          <input type="email" name="email" placeholder="you@example.com" required />
+          <input type="email" name="email" placeholder="you@example.com" autocomplete="new-password" required />
         </div>
         <div class="field">
           <label>Password</label>
-          <input type="password" name="password" id="pw" placeholder="Min. 8 characters"
+          <input id="signup-pw" type="password" name="password" id="pw" placeholder="Min. 8 characters" autocomplete="new-password"
                  required oninput="strength(this.value)" />
+          <i class="fas fa-eye eye-open-signup" id="eye-open-signup" style="display: none;"></i>
+          <i class="fas fa-eye-slash eye-closed-signup" id="eye-closed-signup"></i>
           <div class="bars">
             <div class="bar" id="b1"></div>
             <div class="bar" id="b2"></div>
@@ -65,12 +63,14 @@
         </div>
         <div class="field">
           <label>Confirm password</label>
-          <input type="password" name="confirm" placeholder="••••••••" required />
+          <input id="confirm-pw" type="password" name="confirm" placeholder="Confirm Password" required />
+          <i class="fas fa-eye eye-open-confirm" id="eye-open-confirm" style="display: none;"></i>
+          <i class="fas fa-eye-slash eye-closed-confirm" id="eye-closed-confirm"></i>
         </div>
         <button class="btn" type="submit">Create account</button>
       </form>
  
-      <p class="footer">Already have one? <a href="#" onclick="show('login');return false">Sign in →</a></p>
+      <p class="footer">Already have one? <a href="#" onclick="show('signin');return false">Sign in →</a></p>
     </div>
  
   </div>

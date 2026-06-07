@@ -11,8 +11,8 @@
   --surface: #ffffff;
   --border: rgba(0, 0, 0, 0.08);
   --border2: rgba(255, 255, 255, 0.18);
-  --text: #848484;
-  --muted: #7a7672;
+  --text: #000000;
+  --muted: #000000;
   --btn: rgb(255, 255, 255);
   --accent: hsl(261deg 80% 48%);
   --danger: #e06c6c;
@@ -134,6 +134,7 @@ body::before {
 }
 
 .field {
+  position: relative;
   margin-bottom: 1rem;
 }
 .field label {
@@ -159,18 +160,45 @@ body::before {
     border-color 0.2s,
     background 0.2s;
 }
-.field input::placeholder {
-  color: #3d3d3b;
+
+.field i {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 10;
+  color: #7a7672;
+  transition: all 0.2s ease;
 }
+
+.field .eye-open-signin:hover,
+.field .eye-closed-signin:hover,
+.field .eye-closed-signup:hover,
+.field .eye-open-signup:hover,
+.field .eye-closed-confirm:hover,
+.field .eye-open-confirm:hover {
+  color: var(--accent);
+  transform: scale(1.1);
+}
+
+.field .eye-closed-signup,
+.field .eye-open-signup {
+  bottom: 24px;
+}
+
+.field .eye-closed-confirm,
+.field .eye-open-confirm {
+  bottom: 14px;
+}
+
+.field i:active {
+  transform: scale(0.9);
+}
+
 .field input:focus {
   border-color: var(--accent);
   background: rgba(201, 185, 154, 0.06);
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
 }
 
 /* password strength */
