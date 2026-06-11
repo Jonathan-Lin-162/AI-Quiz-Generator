@@ -32,12 +32,27 @@
 
     <!-- Final Summary Results Area (Hidden Initially) -->
     <div id="quiz-results-box" class="hidden">
-        <h2>Quiz Completed!</h2>
+        <h2 class="quiz-results-title">Quiz Completed!</h2>
         <div id="score-summary"></div>
         <hr>
         <h3>Review your attempts:</h3>
         <div id="summary-cards-container"></div>
-        <button class="create-btn" onclick="window.location.href='/home'">Back to Home</button>
+        <div class="results-btn">
+        <button class="create-btn" onclick="window.history.back()">Create Another Quiz</button>
+        <button class="save-btn" onclick="saveQuiz()">Save</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div class="overlay-box">
+            <form action="/savingQuiz" method="POST">
+                <input type="text" class="quizName" id="quiz-name" placeholder="Enter the name of your quiz" required>
+                <div class="overlay-btn">
+                    <button class="cancelBtn" id="cancel-btn">Cancel</button>
+                    <button class="confirmBtn" id="confirm-btn">OK</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 </div>

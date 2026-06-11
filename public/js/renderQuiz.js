@@ -151,5 +151,20 @@ function showFinalResults() {
     `;
 }
 
+async function saveQuiz() {
+  const overlayBox = document.getElementById("overlay");
+  const confirmBtn = document.getElementById("confirm-btn");
+  const cancelBtn = document.getElementById("cancel-btn");
+  overlayBox.classList.add("show");
+
+  cancelBtn.addEventListener("click", () => {
+    overlayBox.classList.remove("show");
+  });
+
+  confirmBtn.addEventListener("click", () => {
+    const quizName = document.getElementById("quiz-name").value;
+  });
+}
+
 // Kick off initialization logic
 loadQuestion();

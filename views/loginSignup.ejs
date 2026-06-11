@@ -15,7 +15,7 @@
  
       <div id="flash-signin"></div>
  
-      <form action="/login" method="POST">
+      <form action="/loginSubmit" method="POST">
         <div class="field">
           <label>Email</label>
           <input type="email" name="email" placeholder="you@example.com" autocomplete="new-password" required />
@@ -39,7 +39,7 @@
  
       <div id="flash-signup"></div>
  
-      <form action="/signup" method="POST">
+      <form id="signup-form" action="/signupSubmit" method="POST">
           <div class="field">
             <label>Name</label>
             <input type="text" name="name" placeholder="Your Name" required />
@@ -50,8 +50,7 @@
         </div>
         <div class="field">
           <label>Password</label>
-          <input id="signup-pw" type="password" name="password" id="pw" placeholder="Min. 8 characters" autocomplete="new-password"
-                 required oninput="strength(this.value)" />
+          <input id="signup-pw" type="password" name="password" placeholder="Min. 8 characters" autocomplete="new-password" required oninput="strength(this.value)" />
           <i class="fas fa-eye eye-open-signup" id="eye-open-signup" style="display: none;"></i>
           <i class="fas fa-eye-slash eye-closed-signup" id="eye-closed-signup"></i>
           <div class="bars">
@@ -67,7 +66,8 @@
           <i class="fas fa-eye eye-open-confirm" id="eye-open-confirm" style="display: none;"></i>
           <i class="fas fa-eye-slash eye-closed-confirm" id="eye-closed-confirm"></i>
         </div>
-        <button class="btn" type="submit">Create account</button>
+        <div id="flash-signup"></div>
+        <button class="btn" type="submit" onsubmit="return validateSignupForm()">Create account</button>
       </form>
  
       <p class="footer">Already have one? <a href="#" onclick="show('signin');return false">Sign in →</a></p>

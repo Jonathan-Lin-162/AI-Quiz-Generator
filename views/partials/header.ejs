@@ -40,11 +40,10 @@
     </ul>
     
     <ul>
-      <% if (user) { %>
+      <% if (authenticated) { %>
         <li><a href="/logout" class="auth-btn logout">Logout</a></li>
       <% } else { %>
-        <li><a href="/login" class="auth-btn">Login</a></li>
-        <li><a href="/signup" class="auth-btn signup">Signup</a></li>
+        <li><a href="/login" class="auth-btn signup">Login</a></li>
       <% } %>
     </ul>
   </nav>

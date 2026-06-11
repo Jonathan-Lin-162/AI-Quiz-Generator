@@ -40,80 +40,52 @@ async function generateQuiz() {
   const mode = document.getElementById("mode").value;
   const difficulty = difficultyLevel[mode] || difficultyLevel.medium;
 
-  const systemPrompt = `You are an expert educational quiz generator.
+  const systemPrompt = `
+  Output Requirements:
+Return ONLY a single, valid JSON object following this exact structure. The array must contain a natural, unpredictable mix of your chosen question types based on the user's settings. 
 
-Your task is to create accurate, high-quality quiz questions based ONLY on the provided study material.
+Ensure the "answer" is strictly an integer index (0, 1, 2, or 3) matching the correct position in your "options" array.
 
-Rules:
-1. Use only information found in the provided content.
-2. Do not invent facts or add outside knowledge.
-3. Focus on the most important concepts, definitions, processes, and relationships.
-4. Generate clear and unambiguous questions.
-5. Avoid duplicate or repetitive questions.
-6. Ensure incorrect options are plausible but clearly incorrect.
-7. Questions should test understanding, not simple keyword matching.
-8. Keep explanations concise and educational.
-9. If the content is insufficient, generate general questions about that content.
-10. Maintain academic integrity and factual accuracy.
-
-Question Requirements:
-- Generate multiple-choice questions.
-- Each question must have exactly 4 options.
-- Only one option can be correct.
-- Randomize the position of the correct answer.
-- Include a short explanation for the correct answer.
-
-Difficulty Levels: ${difficulty}
-
-
-Output Requirements:
-Return ONLY valid JSON in the following format:
-
-Multiple-Choice Question Type:
+Example Mixed Schema Format:
 {
+  "title": "A creative title for this specific study deck",
   "questions": [
     {
       "id": 1,
-      "question": "Question text",
-      "options": [
-        "Option A",
-        "Option B",
-        "Option C",
-        "Option D"
-      ],
-      "answer": "correct index e.g. 1 for B",
-      "explanation": "Brief explanation",
+      "type": "multiple-choice",
+      "question": "A 4-option conceptual check question?",
+      "options": ["Plausible Distractor A", "Correct Answer Choice", "Plausible Distractor C", "Plausible Distractor D"],
+      "answer": 1,
+      "explanation": "Detailed breakdown of why choice index 1 is factually correct.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 2,
+      "type": "true-false",
+      "question": "A clear, factual True or False statement based on the text?",
+      "options": ["True", "False"],
+      "answer": 0,
+      "explanation": "Contextual reason proving why this statement is True.",
       "difficulty": "medium"
     }
   ]
 }
 
-True/False Question Type:
-{
-  "questions": [
-    {
-      "id": 1,
-      "question": "Question text",
-      "options": [
-        "True",
-        "False"
-      ],
-      "answer": "correct index e.g. 1 for False",
-      "explanation": "Brief explanation",
-      "difficulty": "medium"
-    }
-  ]
-}
-
-Do not include markdown.
-Do not include code blocks.
-Do not include additional text outside the JSON.
-Do not repeat the questions.
+CRITICAL MIX VARIETY RULES:
+1. SHUFFLE THE TYPES: Do not follow a rigid pattern (like alternating MC, TF, MC, TF). Radically randomize the order of your question array cards so the structure remains completely unpredictable.
+2. DO NOT use text strings or matching letters for the "answer" parameter; it must strictly be the numerical array index integer (0 to 3 for multiple-choice, 0 or 1 for true-false).
+3. If the total requested Number of Quizzes is exactly 1 and the type setting is mixed, randomly select only one format to output.
+4. Strictly generate exactly ${quizNumber} questions in total—no more, no less.
+5. Do not include markdown formatting tags (like \`\`\`json) or any conversational text before or after the JSON payload string.
 
 Study Material: ${text}
 Number of Quizzes: ${quizNumber}
-Question Type: ${questionType}
-Excluded Questions List (NEVER REPEAT THESE): ${cleanExclusionList}`;
+Question Type Setting: ${questionType}
+Excluded Questions List (NEVER REPEAT THESE): 
+${cleanExclusionList}
+
+  `;
+  console.log(quizNumber);
   const message = { role: "user", content: systemPrompt };
   try {
     const res = await fetch("/quizGenerate", {
@@ -124,12 +96,13 @@ Excluded Questions List (NEVER REPEAT THESE): ${cleanExclusionList}`;
     const data = await res.json();
     const quizData = JSON.parse(data.quiz);
     quizArray.push(...quizData.questions);
+    console.log(quizData);
     quizID++;
     localStorage.setItem(
       `QuestionSuit${quizID}`,
       JSON.stringify(quizData.questions),
     );
-    createPreviewBox(quizData.questions, quizID);
+    createPreviewBox(quizData.title, quizData.questions, quizID);
   } catch (error) {
     console.log(error);
   } finally {
@@ -137,7 +110,7 @@ Excluded Questions List (NEVER REPEAT THESE): ${cleanExclusionList}`;
   }
 }
 
-function createPreviewBox(questions, currentBoxId) {
+function createPreviewBox(title, questions, currentBoxId) {
   if (!quizPreviewContainer) return;
 
   const previewBox = document.createElement("div");
@@ -145,7 +118,7 @@ function createPreviewBox(questions, currentBoxId) {
   previewBox.style.cursor = "pointer";
 
   previewBox.innerHTML = `
-  <h3 class="preview-header">✨ Quiz Ready! (Suit ${currentBoxId})</h3>
+  <h3 class="preview-header">✨ Quiz Ready! (${title})</h3>
   <p class="preview-text">Generated <strong>${questions.length} questions</strong> based on your requirements.
   <br><span class="preview-link">Click here to start the quiz →
   `;

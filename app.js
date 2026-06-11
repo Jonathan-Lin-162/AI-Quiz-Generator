@@ -1,54 +1,284 @@
+require("./utils.js");
 const express = require("express");
+const session = require("express-session");
+const Joi = require("joi");
+const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 dotenv.config();
 const { GoogleGenAI } = require("@google/genai");
+const MongoStore = require("connect-mongo").default;
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
+const mongodb_host = process.env.MONGODB_HOST;
+const mongodb_user = process.env.MONGODB_USER;
+const mongodb_password = process.env.MONGODB_PASSWORD;
+const mongodb_user_database = process.env.MONGODB_USER_DATABASE;
+const mongodb_user_collection = process.env.MONGODB_USER_COLLECTION;
+const mongodb_saved_quizzes_collection =
+  process.env.MONGODB_SAVED_QUIZZES_COLLECTION;
+const mongodb_session_database = process.env.MONGODB_SESSION_DATABASE;
+const mongodb_session_collection = process.env.MONGODB_SESSION_COLLECTION;
+const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
+const node_session_secret = process.env.NODE_SESSION_SECRET;
+
+const expireTime = 1 * 60 * 60 * 1000;
+const saltRound = 12;
+const { database } = include("databaseConnection");
+const userCollection = database
+  .db(mongodb_user_database)
+  .collection(mongodb_user_collection);
+
+const savedQuizzesCollection = database
+  .db(mongodb_user_database)
+  .collection(mongodb_saved_quizzes_collection);
+
+const mongoStore = MongoStore.create({
+  mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/${mongodb_session_database}`,
+  collectionName: mongodb_session_collection,
+  crypto: {
+    secret: mongodb_session_secret,
+  },
+});
+
 const app = express();
 const port = process.env.PORT || 3000;
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
+app.use(
+  session({
+    secret: node_session_secret,
+    store: mongoStore,
+    saveUninitialized: false,
+    resave: true,
+    cookie: {
+      maxAge: expireTime,
+    },
+  }),
+);
 
-const user = null;
-console.log(process.env.GEMINI_API_KEY);
-app.get("/", (req, res) => {
-  res.render("index", {
-    css: ["index", "header"],
+let user = null;
+const loginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().max(20).required(),
+});
+
+const signupSchema = Joi.object({
+  username: Joi.string().alphanum().max(20).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().max(20).required(),
+});
+
+function displayMessage(res, redirect, message, authenticated) {
+  return res.render("message", {
+    css: ["header"],
     js: [],
-    user: user,
+    message: message,
+    redirect: redirect,
+    authenticated: authenticated,
   });
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+app.get("/", (req, res) => {
+  if (req.session.authenticated) {
+    res.render("main", {
+      css: ["index", "header"],
+      js: [],
+      authenticated: req.session.authenticated,
+    });
+  } else {
+    res.render("index", {
+      css: ["index", "header"],
+      js: [],
+      authenticated: req.session.authenticated,
+    });
+  }
 });
 
 app.get("/home", (req, res) => {
-  res.render("home", { css: ["home", "header"], js: [], user: user });
-});
-
-app.get("/login", (req, res) => {
-  res.render("login", {
-    css: ["login", "header"],
-    js: ["loginSignup"],
-    user: user,
+  if (!req.session.authenticated) {
+    return res.redirect("/");
+  }
+  res.render("home", {
+    css: ["home", "header"],
+    js: [],
+    authenticated: req.session.authenticated,
   });
 });
 
-app.get("/signup", (req, res) => {});
+app.get("/login", (req, res) => {
+  res.render("loginSignup", {
+    css: ["loginSignup", "header"],
+    js: ["loginSignup"],
+    authenticated: req.session.authenticated,
+  });
+});
+
+app.post("/loginSubmit", async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (!email) {
+    return displayMessage(
+      res,
+      "signUp",
+      "Email is required.",
+      req.session.authenticated,
+    );
+  }
+
+  if (!email) {
+    return displayMessage(
+      res,
+      "login",
+      "Email is required.",
+      req.session.authenticated,
+    );
+  }
+
+  if (!password) {
+    return displayMessage(
+      res,
+      "signUp",
+      "Password is required.",
+      req.session.authenticated,
+    );
+  }
+
+  const result = loginSchema.validate({ email, password });
+  if (result.error) {
+    return displayMessage(
+      res,
+      "signUp",
+      "Invalid input.",
+      req.session.authenticated,
+    );
+  }
+
+  const existingUser = await userCollection.findOne({ email });
+
+  if (!existingUser) {
+    return displayMessage(
+      res,
+      "login",
+      "Email does not exist.",
+      req.session.authenticated,
+    );
+  }
+
+  if (await bcrypt.compare(password, existingUser.password)) {
+    req.session.authenticated = true;
+    req.session.username = result.username;
+    req.session.email = result.email;
+    req.session.cookie.maxAge = expireTime;
+
+    return res.redirect("/home");
+  } else {
+    return displayMessage(res, "login", "Password is wrong.");
+  }
+});
+
+app.get("/signup", (req, res) => {
+  res.render("loginSignup", {
+    css: ["loginSignup", "header"],
+    js: ["loginSignup"],
+    authenticated: req.session.authenticated,
+  });
+});
+
+app.post("/signupSubmit", async (req, res) => {
+  const username = req.body.name;
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (!username) {
+    return displayMessage(
+      res,
+      "signUp",
+      "User name is required.",
+      req.session.authenticated,
+    );
+  }
+
+  if (!email) {
+    return displayMessage(res, "login", "Email is required.");
+  }
+
+  if (!password) {
+    return displayMessage(
+      res,
+      "signUp",
+      "Password is required.",
+      req.session.authenticated,
+    );
+  }
+
+  const result = signupSchema.validate({ username, email, password });
+  if (result.error) {
+    return displayMessage(
+      res,
+      "signUp",
+      "Invalid input.",
+      req.session.authenticated,
+    );
+  }
+
+  const existingUser = await userCollection.findOne({ email });
+
+  if (existingUser) {
+    return displayMessage(
+      res,
+      "signUp",
+      "Email already exists.",
+      req.session.authenticated,
+    );
+  }
+
+  const hashedPassword = await bcrypt.hash(password, saltRound);
+
+  await userCollection.insertOne({
+    username: username,
+    email: email,
+    password: hashedPassword,
+  });
+
+  req.session.username = username;
+  req.session.email = email;
+  req.session.authenticated = true;
+  req.session.cookie.maxAge = expireTime;
+
+  return res.redirect("/home");
+});
 
 app.get("/create", (req, res) => {
+  if (!req.session.authenticated) {
+    return res.redirect("/");
+  }
   res.render("create", {
     css: ["header", "create"],
     js: ["create"],
-    user: user,
+    authenticated: req.session.authenticated,
   });
 });
 
 app.get("/renderQuiz", (req, res) => {
+  if (!req.session.authenticated) {
+    return res.redirect("/");
+  }
   res.render("renderQuiz", {
     css: ["header", "renderQuiz"],
     js: ["renderQuiz"],
-    user: user,
+    authenticated: req.session.authenticated,
   });
 });
 
@@ -71,8 +301,15 @@ app.post("/quizGenerate", async (req, res) => {
       rawText = rawText.substring(3, rawText.length - 3).trim();
     }
 
+    let quizData = JSON.parse(rawText);
+    quizData.questions = shuffleArray(quizData.questions);
+
+    quizData.questions.forEach((q, idx) => {
+      q.id = idx + 1;
+    });
+
     // Return the clean stringified JSON directly to the client
-    res.json({ quiz: rawText });
+    res.json({ quiz: JSON.stringify(quizData) });
   } catch (error) {
     console.error(error);
 
@@ -81,6 +318,13 @@ app.post("/quizGenerate", async (req, res) => {
       details: error.message,
     });
   }
+});
+
+app.post("/savingQuiz", async (req, res) => {});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  return res.redirect("/");
 });
 
 app.listen(port, (req, res) => {

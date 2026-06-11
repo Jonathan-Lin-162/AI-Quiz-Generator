@@ -1,4 +1,7 @@
 body {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
   background-color: #f8f9fa;
 }
 
@@ -113,10 +116,136 @@ body {
   background: white;
 }
 
+.results-btn {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
 .create-btn {
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
   border: 1px solid #ccc;
   background: white;
+}
+
+.save-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.save-btn:active {
+  border: 1px solid #6dfe3c;
+  background: rgb(162, 255, 163);
+  transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+  background: hsl(261deg 80% 48%);
+  border-color: hsl(261deg 80% 48%);
+  color: white;
+}
+
+.quiz-results-title {
+  text-align: center;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(198, 198, 198, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay.show {
+  display: flex;
+}
+
+.overlay-box {
+  margin: auto;
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 50px;
+  text-align: center;
+  border: 3px solid #ccc;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.4);
+  max-width: 420px;
+  width: 90%;
+  animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.quizName {
+  width: 100%;
+  border: 2px solid #eef0f5;
+  border-radius: 10px;
+  color: #222;
+  padding: 12px 40px 12px 16px;
+  background-color: #fafafa;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.quizName:hover {
+  border-color: #d1d5db;
+  background-color: #ffffff;
+}
+
+.quizName:focus {
+  border-color: hsl(261deg 80% 48%);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(93, 24, 220, 0.12);
+}
+
+.overlay-btn {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.confirmBtn {
+  border-radius: 10px;
+  padding: 6px 20px;
+  background: transparent;
+  border: 2px rgb(0, 185, 0) solid;
+  color: rgb(0, 185, 0);
+  transition: all 0.3s ease;
+}
+
+.confirmBtn:hover {
+  background: rgb(0, 185, 0);
+  color: white;
+}
+
+.cancelBtn {
+  border-radius: 10px;
+  padding: 6px 20px;
+  background: transparent;
+  border: 2px #dc3545 solid;
+  color: #dc3545;
+  transition: all 0.3s ease;
+}
+
+.cancelBtn:hover {
+  background: #dc3545;
+  color: white;
+}
+
+@keyframes pop-in {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
