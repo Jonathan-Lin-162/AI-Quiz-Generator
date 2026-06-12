@@ -45,11 +45,15 @@
 
     <div class="overlay" id="overlay">
         <div class="overlay-box">
-            <form action="/savingQuiz" method="POST">
+            <legdend class="name">
+                Quiz Name: 
+            </legdend>
+            <form id="quiz-save-form" onsubmit="event.preventDefault();">
                 <input type="text" class="quizName" id="quiz-name" placeholder="Enter the name of your quiz" required>
+                <p id="warning-text"></p>
                 <div class="overlay-btn">
-                    <button class="cancelBtn" id="cancel-btn">Cancel</button>
-                    <button class="confirmBtn" id="confirm-btn">OK</button>
+                    <button type="button" class="cancelBtn" id="cancel-btn">Cancel</button>
+                    <button type="submit" class="confirmBtn" id="confirm-btn">OK</button>
                 </div>
             </form>
         </div>

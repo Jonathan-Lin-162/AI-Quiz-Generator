@@ -153,17 +153,51 @@ function showFinalResults() {
 
 async function saveQuiz() {
   const overlayBox = document.getElementById("overlay");
+  const quizName = document.getElementById("quiz-name");
   const confirmBtn = document.getElementById("confirm-btn");
   const cancelBtn = document.getElementById("cancel-btn");
+  const warningText = document.getElementById("warning-text");
   overlayBox.classList.add("show");
 
-  cancelBtn.addEventListener("click", () => {
+  cancelBtn.onclick = () => {
     overlayBox.classList.remove("show");
-  });
+  };
 
-  confirmBtn.addEventListener("click", () => {
-    const quizName = document.getElementById("quiz-name").value;
-  });
+  confirmBtn.onclick = async (e) => {
+    e.preventDefault();
+    if (quizName.value.trim().length === 0) {
+      warningText.innerHTML = `Please give a name for the quiz!`;
+      quizName.value = "";
+      return;
+    }
+
+    confirmBtn.disabled = true;
+    confirmBtn.innerText = "Saving...";
+
+    const payload = {
+      title: quizName.value,
+      questions: questions,
+    };
+
+    try {
+      const res = await fetch("/savingQuiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        overlayBox.classList.remove("show");
+      } else {
+        throw new Error(data.error || "Database rejection encountered");
+      }
+    } catch (error) {
+      console.error("Failed to upload save packet:", error);
+    } finally {
+      confirmBtn.disabled = false;
+      confirmBtn.innerText = "OK";
+    }
+  };
 }
 
 // Kick off initialization logic

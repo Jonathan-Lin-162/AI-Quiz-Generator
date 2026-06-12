@@ -131,15 +131,6 @@ app.post("/loginSubmit", async (req, res) => {
   if (!email) {
     return displayMessage(
       res,
-      "signUp",
-      "Email is required.",
-      req.session.authenticated,
-    );
-  }
-
-  if (!email) {
-    return displayMessage(
-      res,
       "login",
       "Email is required.",
       req.session.authenticated,
@@ -178,8 +169,9 @@ app.post("/loginSubmit", async (req, res) => {
 
   if (await bcrypt.compare(password, existingUser.password)) {
     req.session.authenticated = true;
-    req.session.username = result.username;
-    req.session.email = result.email;
+    req.session.userId = existingUser._id.toString();
+    req.session.username = existingUser.username;
+    req.session.email = existingUser.email;
     req.session.cookie.maxAge = expireTime;
 
     return res.redirect("/home");
@@ -197,67 +189,78 @@ app.get("/signup", (req, res) => {
 });
 
 app.post("/signupSubmit", async (req, res) => {
-  const username = req.body.name;
-  const email = req.body.email;
-  const password = req.body.password;
+  try {
+    const username = req.body.name;
+    const email = req.body.email;
+    const password = req.body.password;
 
-  if (!username) {
-    return displayMessage(
-      res,
-      "signUp",
-      "User name is required.",
-      req.session.authenticated,
-    );
+    if (!username) {
+      return displayMessage(
+        res,
+        "signUp",
+        "User name is required.",
+        req.session.authenticated,
+      );
+    }
+    if (!email) {
+      return displayMessage(
+        res,
+        "signUp",
+        "Email is required.",
+        req.session.authenticated,
+      );
+    }
+    if (!password) {
+      return displayMessage(
+        res,
+        "signUp",
+        "Password is required.",
+        req.session.authenticated,
+      );
+    }
+
+    const result = signupSchema.validate({ username, email, password });
+    if (result.error) {
+      return displayMessage(
+        res,
+        "signUp",
+        "Invalid input format.",
+        req.session.authenticated,
+      );
+    }
+
+    const existingUser = await userCollection.findOne({ email });
+    if (existingUser) {
+      return displayMessage(
+        res,
+        "signUp",
+        "Email already exists.",
+        req.session.authenticated,
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(password, saltRound);
+
+    // Capture insert return metadata to harvest the generated _id
+    const insertResult = await userCollection.insertOne({
+      username: username,
+      email: email,
+      password: hashedPassword,
+    });
+
+    // Stored successfully as a plain text string wrapper
+    req.session.userId = insertResult.insertedId.toString();
+    req.session.username = username;
+    req.session.email = email;
+    req.session.authenticated = true;
+    req.session.cookie.maxAge = expireTime;
+
+    return res.redirect("/home");
+  } catch (error) {
+    // This block catches any database issues and stops the route from freezing
+    console.error("Signup internal processing error:", error);
+    return res.status(500).send("Internal server error during registration.");
   }
-
-  if (!email) {
-    return displayMessage(res, "login", "Email is required.");
-  }
-
-  if (!password) {
-    return displayMessage(
-      res,
-      "signUp",
-      "Password is required.",
-      req.session.authenticated,
-    );
-  }
-
-  const result = signupSchema.validate({ username, email, password });
-  if (result.error) {
-    return displayMessage(
-      res,
-      "signUp",
-      "Invalid input.",
-      req.session.authenticated,
-    );
-  }
-
-  const existingUser = await userCollection.findOne({ email });
-
-  if (existingUser) {
-    return displayMessage(
-      res,
-      "signUp",
-      "Email already exists.",
-      req.session.authenticated,
-    );
-  }
-
-  const hashedPassword = await bcrypt.hash(password, saltRound);
-
-  await userCollection.insertOne({
-    username: username,
-    email: email,
-    password: hashedPassword,
-  });
-
-  req.session.username = username;
-  req.session.email = email;
-  req.session.authenticated = true;
-  req.session.cookie.maxAge = expireTime;
-
-  return res.redirect("/home");
 });
 
 app.get("/create", (req, res) => {
@@ -320,7 +323,44 @@ app.post("/quizGenerate", async (req, res) => {
   }
 });
 
-app.post("/savingQuiz", async (req, res) => {});
+app.post("/savingQuiz", async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const { title, questions } = req.body;
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized user session context." });
+    }
+
+    const newQuizRecord = {
+      title: title,
+      questions: questions,
+      createdAt: new Date(),
+    };
+
+    // Write the raw array objects directly to MongoDB Atlas
+    await savedQuizzesCollection.updateOne(
+      { userId: userId },
+      {
+        $push: { quizzes: newQuizRecord },
+      },
+      { upsert: true },
+    );
+
+    res.json({ success: true, message: "Quiz saved to database cleanly!" });
+  } catch (error) {
+    // ⚡ CRITICAL DEBUG LOG: This will print the exact database error to your terminal panel!
+    console.error("MONGODB SAVE CRASH DIRECTIVE:", error);
+
+    res
+      .status(500)
+      .json({ error: "Failed to store record", details: error.message });
+  }
+});
+
+app.get("/myQuizzes", (req, res) => {});
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
