@@ -1,6 +1,7 @@
 const sendBtn = document.getElementById("textSentBtn");
 const quizViewContainer = document.getElementById("quiz-view-container");
 const quizPreviewContainer = document.getElementById("quiz-container");
+const time = document.getElementById("time").value;
 const difficultyLevel = {
   easy: "Easy - Recall basic facts and definitions.",
   medium: "Medium - Test understanding and application.",
@@ -96,12 +97,10 @@ ${cleanExclusionList}
     const data = await res.json();
     const quizData = JSON.parse(data.quiz);
     quizArray.push(...quizData.questions);
+    quizData.time = time;
     console.log(quizData);
     quizID++;
-    localStorage.setItem(
-      `QuestionSuit${quizID}`,
-      JSON.stringify(quizData.questions),
-    );
+    localStorage.setItem(`QuestionSuit${quizID}`, JSON.stringify(quizData));
     createPreviewBox(quizData.title, quizData.questions, quizID);
   } catch (error) {
     console.log(error);
@@ -124,7 +123,7 @@ function createPreviewBox(title, questions, currentBoxId) {
   `;
 
   previewBox.onclick = () => {
-    window.location.href = `/renderQuiz?id=${currentBoxId}`;
+    window.location.href = `/renderQuiz?id=${currentBoxId}&source=local`;
   };
   quizPreviewContainer.appendChild(previewBox);
 }

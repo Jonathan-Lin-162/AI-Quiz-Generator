@@ -219,7 +219,11 @@ app.post("/signupSubmit", async (req, res) => {
       );
     }
 
-    const result = signupSchema.validate({ username, email, password });
+    const result = signupSchema.validate({
+      username,
+      email,
+      password,
+    });
     if (result.error) {
       return displayMessage(
         res,
@@ -360,7 +364,136 @@ app.post("/savingQuiz", async (req, res) => {
   }
 });
 
-app.get("/myQuizzes", (req, res) => {});
+app.get("/myQuizzes", async (req, res) => {
+  if (!req.session.authenticated) {
+    return res.redirect("/");
+  }
+
+  const userId = req.session.userId;
+  const results = await savedQuizzesCollection.findOne({ userId });
+
+  res.render("myQuizzes", {
+    css: ["header", "myQuizzes"],
+    js: ["myQuizzes"],
+    results: JSON.stringify(results),
+    authenticated: req.session.authenticated,
+  });
+});
+
+app.get("/fetchingMongoDBdata/:quizIndex", async (req, res) => {
+  try {
+    if (!req.session.authenticated) {
+      return res.redirect("/");
+    }
+
+    const userId = req.session.userId;
+    const quizIndex = parseInt(req.params.quizIndex, 10);
+    const userDocument = await savedQuizzesCollection.findOne({
+      userId,
+    });
+
+    if (!userDocument || !userDocument.quizzes) {
+      return res
+        .status(404)
+        .json({ error: "Quiz collection document not found." });
+    }
+    const specificQuiz = userDocument.quizzes[quizIndex];
+
+    if (!specificQuiz) {
+      return res
+        .status(404)
+        .json({ error: "No quiz found at the specified index position." });
+    }
+    return res.json(specificQuiz);
+  } catch (error) {
+    console.error("Backend nested array retrieval crash:", error);
+    return res.status(500).json({ error: "Internal server processing error." });
+  }
+});
+
+app.post("/editingQuizName", async (req, res) => {
+  try {
+    if (!req.session.authenticated) {
+      return res.redirect("/");
+    }
+
+    const userId = req.session.userId;
+    const newTitle = req.body.title;
+    const quizIndex = parseInt(req.body.quizIndex, 10);
+
+    if (isNaN(quizIndex) || !newTitle || newTitle.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid quiz index or missing title.",
+      });
+    }
+
+    const updatePath = `quizzes.${quizIndex}.title`;
+
+    const result = await savedQuizzesCollection.updateOne(
+      { userId },
+      { $set: { [updatePath]: newTitle.trim() } },
+    );
+
+    if (result.matchedCount === 0) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Quiz record document not found." });
+    }
+
+    return res.json({
+      success: true,
+      message: "Quiz title updated successfully!",
+    });
+  } catch (error) {
+    console.error("Backend name transformation failed:", error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal server processing error." });
+  }
+});
+
+app.post("/deletingQuiz", async (req, res) => {
+  try {
+    if (!req.session.authenticated) {
+      return res.redirect("/");
+    }
+
+    const userId = req.session.userId;
+    const quizIndex = parseInt(req.body.quizIndex, 10);
+
+    if (isNaN(quizIndex)) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid quiz index configuration provided.",
+      });
+    }
+
+    const unsetPath = `quizzes.${quizIndex}`;
+    const result = await savedQuizzesCollection.updateOne(
+      { userId },
+      { $unset: { [unsetPath]: 1 } },
+    );
+
+    if (result.matchedCount === 0) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Quiz record document not found." });
+    }
+
+    await savedQuizzesCollection.updateOne(
+      { userId },
+      { $pull: { quizzes: null } },
+    );
+
+    return res.json({ success: true, message: "Quiz deleted successfully!" });
+  } catch (error) {
+    console.error("Backend quiz deletion failure:", error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal server processing error." });
+  }
+});
 
 app.get("/logout", (req, res) => {
   req.session.destroy();

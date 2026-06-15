@@ -27,19 +27,27 @@
   <body>
     <header>
   <div class="logo-container">
-    <img src="/images/logo.png" alt="logo"> <!-- Point to your static folder image -->
+    <img src="/images/logo.png" alt="logo" class="logo-img"> 
     <p class="app-name">StudySpark AI</p>
   </div>
   
-  <!-- Wrapped navigation lists inside a semantic nav container -->
-  <nav style="display: flex; gap: 40px; align-items: center;">
-    <ul>
+  <!-- Pure CSS Hamburger Toggle Trigger Mechanism -->
+  <input type="checkbox" id="menu-toggle" class="menu-toggle-checkbox">
+  <label for="menu-toggle" class="hamburger-label">
+    <span></span>
+    <span></span>
+    <span></span>
+  </label>
+
+  <!-- Cleaned inline styles from nav container -->
+  <nav class="nav-menu">
+    <ul class="nav-links">
       <li><a href="/home">Home</a></li>
       <li><a href="/myQuizzes">My Quizzes</a></li>
       <li><a href="/guidance">Guidance</a></li>
     </ul>
     
-    <ul>
+    <ul class="auth-links">
       <% if (authenticated) { %>
         <li><a href="/logout" class="auth-btn logout">Logout</a></li>
       <% } else { %>
@@ -48,3 +56,4 @@
     </ul>
   </nav>
 </header>
+

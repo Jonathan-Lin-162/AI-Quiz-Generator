@@ -263,3 +263,70 @@ body::before {
   text-decoration: none;
   font-weight: 500;
 }
+
+/* --- Fix absolute icon positioning to break cleanly on all devices --- */
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Restructures the input parent wrapper to use standard vertical alignments */
+.field-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Safely centers eye icons vertically inside the wrapper regardless of text scale */
+.field i {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: auto !important; /* Overrides the fragile hardcoded bottom values */
+}
+
+.field i:active {
+  transform: translateY(-50%) scale(0.9); /* Maintains vertical center point when pressed */
+}
+
+/* --- Mobile Viewport Responsiveness Query --- */
+@media (max-width: 480px) {
+  /* 1. Pull the body container closer to the edge for a wider tap zone on micro displays */
+  .main {
+    padding: 1rem 0.5rem;
+    min-height: 100vh; /* Expands to fill full screen real-estate height cleanly */
+  }
+
+  /* 2. Soften interior padding blocks inside the active form panels */
+  .body {
+    padding: 1.5rem;
+  }
+
+  /* 3. Scale text elements down to preserve layout lines without awkward text-wrapping */
+  .logo {
+    font-size: 20px;
+  }
+
+  .sub {
+    font-size: 12px;
+    margin-bottom: 1.25rem;
+  }
+
+  /* 4. Increase form element sizing slightly for easier thumb interaction */
+  .field input {
+    padding: 12px 14px;
+    font-size: 15px; /* Prevents iOS Safari auto-zoom on input focus */
+  }
+
+  .tab {
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .btn {
+    padding: 16px 20px; /* Thicker touch point profile */
+    font-size: 15px;
+  }
+}

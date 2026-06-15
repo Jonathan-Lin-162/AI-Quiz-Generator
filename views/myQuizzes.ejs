@@ -1,0 +1,37 @@
+<%- include("partials/header.ejs", {css: css}) %> 
+<h1 class="title">My Saved Quizzes</h1>
+<div class="cardBox" id="card-box">
+    <p class="message" id="message">Loading...</p>
+</div>
+
+<div class="overlay-edit" id="overlay-edit">
+        <div class="overlay-edit-box">
+            <legdend class="name">
+                Quiz Name: 
+            </legdend>
+            <form id="edit-form" onsubmit="event.preventDefault();">
+                <input type="text" class="quizName" id="quiz-name" placeholder="Enter the name of your quiz" required>
+                <p id="warning-text"></p>
+                <div class="overlay-btn">
+                    <button type="button" class="cancelBtn" id="cancel-btn">Cancel</button>
+                    <button type="submit" class="confirmBtn" id="confirm-btn">OK</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<div class="overlay-delete" id="overlay-delete">
+        <div class="overlay-delete-box">
+            <legdend class="check-question" id="check-question">
+                Are you sure you want to delete?
+            </legdend>
+                <div class="overlay-btn">
+                    <button type="button" class="noBtn" id="no-btn">No</button>
+                    <button type="button" class="yesBtn" id="yes-btn">Yes</button>
+                </div>
+        </div>
+    </div>
+<script>
+  window.results = <%- results %>;
+</script>
+<%- include("partials/footer.ejs") %>

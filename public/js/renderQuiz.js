@@ -1,17 +1,14 @@
 const urlParams = new URLSearchParams(window.location.search);
 const quizId = urlParams.get("id");
-console.log(quizId);
+const source = urlParams.get("source") || "local";
 if (!quizId) {
   console.error("No Quiz Id found in the page link layout!");
 }
 
 // Pull text string out and turn it back into an object
-const questions = JSON.parse(localStorage.getItem(`QuestionSuit${quizId}`));
-console.log(questions); // Output: { questions: [...] }
-
+let questions = [];
 let currentIdx = 0;
-// Array tracking user choices matching question indices. stores: undefined (unanswered), or index value
-let userSelections = new Array(questions.length).fill(undefined);
+let userSelections = [];
 
 // DOM Selectors
 const questionTxt = document.getElementById("question-text");
@@ -23,8 +20,44 @@ const feedbackStatus = document.getElementById("feedback-status");
 const feedbackExplain = document.getElementById("feedback-explanation");
 const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
+const quizActiveBox = document.getElementById("quiz-active-box");
+const resultsBox = document.getElementById("quiz-results-box");
+const saveBtn = document.querySelector(".save-btn");
+const retakeBtn = document.querySelector(".retake");
+const timer = document.getElementById("timer");
+const timerContainer = document.getElementById("timer-container");
+let timerInterval = null;
+let timeLeft = 30;
+let time = 30;
+
+async function initQuiz() {
+  try {
+    if (source === "db") {
+      const res = await fetch(`/fetchingMongoDBdata/${quizId}`);
+      if (!res.ok) throw new Error("Failed to retrieve quiz data from server.");
+      const data = await res.json();
+      questions = data.questions || [];
+    } else {
+      const rawData = JSON.parse(localStorage.getItem(`QuestionSuit${quizId}`));
+      questions = rawData?.questions || rawData || [];
+      time = rawData.time || 30;
+    }
+
+    if (!questions || questions.length === 0) {
+      throw new Error("No questions found for this quiz record configuration.");
+    }
+
+    userSelections = new Array(questions.length).fill(undefined);
+    loadQuestion();
+  } catch (error) {
+    console.error("Quiz Initialization Error:", error);
+    questionTxt.innerText = "Error loading quiz data. Please try again.";
+  }
+}
 
 function loadQuestion() {
+  stopTimer();
+  timeLeft = time;
   const q = questions[currentIdx];
 
   // 1. Render layout details & progress
@@ -50,6 +83,8 @@ function loadQuestion() {
   // 3. Keep state integrity: If user has previously answered this question, visually display it
   if (userSelections[currentIdx] !== undefined) {
     showFeedback(userSelections[currentIdx]);
+  } else {
+    startTimer();
   }
 }
 
@@ -60,6 +95,7 @@ function selectOption(selectedIndex) {
 }
 
 function showFeedback(selectedIndex) {
+  stopTimer();
   const q = questions[currentIdx];
   const optionButtons = optionsBox.querySelectorAll(".option-item");
 
@@ -100,6 +136,7 @@ nextBtn.onclick = () => {
     currentIdx++;
     loadQuestion();
   } else {
+    stopTimer();
     showFinalResults();
   }
 };
@@ -112,8 +149,13 @@ prevBtn.onclick = () => {
 };
 
 function showFinalResults() {
-  document.getElementById("quiz-active-box").classList.add("hidden");
-  const resultsBox = document.getElementById("quiz-results-box");
+  if (source === "db") {
+    saveBtn.classList.add("hidden");
+  } else {
+    saveBtn.classList.remove("hidden");
+  }
+
+  quizActiveBox.classList.add("hidden");
   resultsBox.classList.remove("hidden");
 
   let totalCorrect = 0;
@@ -129,16 +171,18 @@ function showFinalResults() {
     card.className = `summary-card ${isCorrect ? "passed" : "failed"}`;
     card.innerHTML = `
     <h4 class="q-title"></h4>
-    <p><strong>Your Answer:</strong> <span class="user-ans"></span> (<span class="status-lbl"></span>)</p>
+    <p><strong>Your Answer:</strong> <span class="user-ans"></span> <span class="status-lbl"></span></p>
     <p><strong>Correct Answer:</strong> <span class="correct-ans"></span></p>
     <p class="exp-text" style="font-size:14px; color:#555;"></p>
 `;
     card.querySelector(".q-title").textContent = `Q${idx + 1}: ${q.question}`;
     card.querySelector(".user-ans").textContent =
-      chosenIdx !== undefined ? q.options[chosenIdx] : "Skipped";
-    card.querySelector(".status-lbl").textContent = isCorrect
-      ? "Correct"
-      : "Incorrect";
+      chosenIdx == "skipped" ? "Skipped" : q.options[chosenIdx];
+    if (chosenIdx != "skipped") {
+      card.querySelector(".status-lbl").textContent = isCorrect
+        ? "(Correct)"
+        : "(Incorrect)";
+    }
     card.querySelector(".correct-ans").textContent = q.options[q.answer];
     card.querySelector(".exp-text").textContent = q.explanation;
     summaryContainer.appendChild(card);
@@ -149,6 +193,14 @@ function showFinalResults() {
             You scored ${totalCorrect} out of ${questions.length}!
         </h3>
     `;
+}
+
+function retake() {
+  userSelections = new Array(questions.length).fill(undefined);
+  currentIdx = 0;
+  quizActiveBox.classList.remove("hidden");
+  resultsBox.classList.add("hidden");
+  loadQuestion();
 }
 
 async function saveQuiz() {
@@ -200,5 +252,25 @@ async function saveQuiz() {
   };
 }
 
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 5) timerContainer.classList.add("warning");
+    if (timeLeft <= 0) selectOption("skipped");
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  timerContainer.classList.remove("warning");
+}
+
+function updateTimerDisplay() {
+  timer.textContent = `${timeLeft}s`;
+}
+
 // Kick off initialization logic
-loadQuestion();
+initQuiz();

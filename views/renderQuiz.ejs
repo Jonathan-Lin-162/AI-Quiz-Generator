@@ -1,4 +1,6 @@
 <%- include("partials/header.ejs", {css: css}) %> 
+
+<div class="timer-container" id="timer-container">Time Left: <span id="timer"></span></div>
 <div class="quiz-view-container">
     
     <!-- Active Quiz Area -->
@@ -38,8 +40,9 @@
         <h3>Review your attempts:</h3>
         <div id="summary-cards-container"></div>
         <div class="results-btn">
-        <button class="create-btn" onclick="window.history.back()">Create Another Quiz</button>
+        <button class="create-btn" onclick="window.history.back()">Create Quiz</button>
         <button class="save-btn" onclick="saveQuiz()">Save</button>
+        <button class="retake-btn" onclick="retake()">Retake</button>
         </div>
     </div>
 

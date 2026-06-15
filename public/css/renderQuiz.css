@@ -128,6 +128,13 @@ body {
   cursor: pointer;
   border: 1px solid #ccc;
   background: white;
+  transition: all 0.3s ease;
+}
+
+.create-btn:hover {
+  background: hsl(261deg 80% 48%);
+  border-color: hsl(261deg 80% 48%);
+  color: white;
 }
 
 .save-btn {
@@ -139,6 +146,10 @@ body {
   transition: all 0.3s ease;
 }
 
+.save-btn .hidden {
+  display: none;
+}
+
 .save-btn:active {
   border: 1px solid #6dfe3c;
   background: rgb(162, 255, 163);
@@ -146,6 +157,21 @@ body {
 }
 
 .save-btn:hover {
+  background: hsl(261deg 80% 48%);
+  border-color: hsl(261deg 80% 48%);
+  color: white;
+}
+
+.retake-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.retake-btn:hover {
   background: hsl(261deg 80% 48%);
   border-color: hsl(261deg 80% 48%);
   color: white;
@@ -249,6 +275,26 @@ body {
   color: #dc3545;
 }
 
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  align-items: center;
+  justify-content: center;
+  border: 2px #eef0f5 solid;
+  border-radius: 10px;
+  width: 120px;
+  height: 80px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.timer-container.warning {
+  color: #dc3545;
+  border-color: #dc3545;
+  animation: blink 0.5s infinite;
+}
+
 @keyframes pop-in {
   from {
     transform: scale(0.5);
@@ -257,5 +303,82 @@ body {
   to {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* --- Mobile Responsiveness Media Query --- */
+@media (max-width: 640px) {
+  /* 1. Expand layout viewport canvas boundaries on small phone screens */
+  .quiz-view-container {
+    width: 92%;
+    margin: 16px auto;
+    padding: 20px 16px; /* Tightens container padding so content room is maximized */
+  }
+
+  /* 2. Unstack result button configurations and give them larger tap targets */
+  .navigation-controls,
+  .results-btn {
+    flex-direction: column;
+    gap: 12px; /* Adds physical safety space between actionable objects */
+    margin-top: 16px;
+  }
+
+  /* 3. Force buttons to span full layout width for comfortable mobile tapping */
+  .nav-btn,
+  .create-btn,
+  .save-btn,
+  .retake-btn {
+    width: 100%;
+    padding: 14px 20px; /* Chunkier thumb targets to improve phone accessibility */
+    text-align: center;
+    font-size: 15px;
+  }
+
+  /* 4. Optimize option items text wrap padding boundaries */
+  .option-item {
+    padding: 12px 16px;
+    font-size: 15px;
+    margin: 8px 0;
+  }
+
+  /* 5. Scale down text labels slightly so long headers fit cleanly */
+  #question-text {
+    font-size: 1.2rem;
+    line-height: 1.4;
+  }
+
+  .quiz-results-title h2 {
+    font-size: 1.4rem;
+  }
+
+  /* 6. Refine overlay modal presentation windows */
+  .overlay-box {
+    padding: 24px 20px;
+  }
+
+  .name {
+    font-size: 18px;
+  }
+
+  .overlay-btn {
+    gap: 12px;
+  }
+
+  .confirmBtn,
+  .cancelBtn {
+    flex: 1; /* Automatically split space equally across the modal row axis */
+    padding: 12px 16px;
+    font-size: 14px;
+    text-align: center;
   }
 }

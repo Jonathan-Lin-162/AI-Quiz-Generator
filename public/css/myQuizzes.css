@@ -1,0 +1,338 @@
+/* Modern Reset & Global Styles */
+body {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  background-color: #f4f6f9;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* 
+  1. Responsive Grid Container
+  Automatically arranges cards side-by-side on desktop 
+  and stacks them neatly into 1 column on mobile phones.
+*/
+.cardBox {
+  width: 60%;
+  margin: 40px auto;
+}
+
+.title {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* 
+  2. Sleek Quiz Card Layout 
+  Removed the fixed height so titles never overflow.
+  Added a subtle box-shadow and transition animations.
+*/
+.quizCard {
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: left;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.message {
+  text-align: center;
+}
+
+/* Hover Effect: Card gently lifts up and shifts to your primary theme color */
+.quizCard:hover {
+  transform: translateY(-5px);
+  border-color: hsl(261deg 80% 48%);
+  box-shadow:
+    0 10px 15px -3px rgba(110, 68, 255, 0.1),
+    0 4px 6px -2px rgba(110, 68, 255, 0.05);
+}
+
+/* Elegant left accent bar using your primary theme color */
+.quizCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: hsl(261deg 80% 48%);
+  opacity: 0.7;
+}
+
+/* 
+  3. Typography Styles
+*/
+.quizTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+/* Optional: Add a metadata snippet under the title if you want to track it later */
+.quizMeta {
+  font-size: 0.85rem;
+  color: #718096;
+  margin-bottom: 20px;
+}
+
+.information-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons {
+  transform: translateY(-20px);
+}
+
+.edit-btn {
+  padding: 8px 12px;
+  border: 2px hsl(261deg 80% 48%) solid;
+  border-radius: 10px;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.edit-btn:hover {
+  color: white;
+  background-color: hsl(261deg 80% 48%);
+}
+
+.delete-btn {
+  padding: 8px 12px;
+  border: 2px #dc3545 solid;
+  border-radius: 10px;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  color: white;
+  background-color: #dc3545;
+}
+
+/* From Uiverse.io by CristianMontoya98 */
+.create-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.create-btn {
+  width: 6.5em;
+  height: 2.3em;
+  margin: 0.5em;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 0.625em;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.create-btn:hover {
+  color: black;
+}
+
+.create-btn:after {
+  content: "";
+  background: white;
+  position: absolute;
+  z-index: -1;
+  left: -20%;
+  right: -20%;
+  top: 0;
+  bottom: 0;
+  transform: skewX(-45deg) scale(0, 1);
+  transition: all 0.5s;
+}
+
+.create-btn:hover:after {
+  transform: skewX(-45deg) scale(1, 1);
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.overlay-edit,
+.overlay-delete {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(198, 198, 198, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-edit.show,
+.overlay-delete.show {
+  display: flex;
+}
+
+.overlay-edit-box,
+.overlay-delete-box {
+  margin: auto;
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 50px;
+  text-align: center;
+  border: 3px solid #ccc;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.4);
+  max-width: 420px;
+  width: 90%;
+  animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.quizName {
+  margin-top: 6px;
+  width: 100%;
+  border: 2px solid #eef0f5;
+  border-radius: 10px;
+  color: #222;
+  padding: 12px 40px 12px 16px;
+  background-color: #fafafa;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.name {
+  font-size: 20px;
+}
+
+.quizName:hover {
+  border-color: #d1d5db;
+  background-color: #ffffff;
+}
+
+.quizName:focus {
+  border-color: hsl(261deg 80% 48%);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(93, 24, 220, 0.12);
+}
+
+.overlay-btn {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.confirmBtn,
+.yesBtn {
+  border-radius: 10px;
+  padding: 6px 20px;
+  background: transparent;
+  border: 2px rgb(0, 185, 0) solid;
+  color: rgb(0, 185, 0);
+  transition: all 0.3s ease;
+}
+
+.confirmBtn:hover,
+.yesBtn:hover {
+  background: rgb(0, 185, 0);
+  color: white;
+}
+
+.cancelBtn,
+.noBtn {
+  border-radius: 10px;
+  padding: 6px 20px;
+  background: transparent;
+  border: 2px #dc3545 solid;
+  color: #dc3545;
+  transition: all 0.3s ease;
+}
+
+.cancelBtn:hover,
+.noBtn:hover {
+  background: #dc3545;
+  color: white;
+}
+
+#warning-text {
+  font-size: 12px;
+  color: #dc3545;
+}
+
+@keyframes pop-in {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* --- Mobile Viewport Responsiveness Query --- */
+@media (max-width: 768px) {
+  /* 1. Expand the card wrapper box to take full fluid width with safe margins */
+  .cardBox {
+    width: 90%;
+    margin: 20px auto;
+  }
+
+  /* 2. Unstack metadata text and operational buttons into a vertical row layout */
+  .information-container {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  /* 3. Reset the artificial button height shifts so they stay perfectly inside the card bounding area */
+  .buttons {
+    transform: none; /* Wipes out the aggressive -20px desktop translation */
+    display: flex;
+    width: 100%;
+    gap: 10px;
+  }
+
+  /* 4. Force individual utility action buttons to expand equally side-by-side */
+  .edit-btn,
+  .delete-btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px; /* Marginally chunkier dimensions for clean thumb activation targets */
+    font-size: 14px;
+  }
+
+  /* 5. Scale typography sizes so long titles do not wrap into multi-line fragments */
+  .quizTitle {
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+  }
+
+  .quizMeta {
+    margin-bottom: 0; /* Clear bottom margins since flexbox handles spacing dynamically now */
+    font-size: 0.8rem;
+  }
+
+  /* 6. Tighten modal card presentation scales on ultra-narrow panels */
+  .overlay-edit-box,
+  .overlay-delete-box {
+    padding: 24px 20px;
+  }
+
+  .name {
+    font-size: 18px;
+  }
+}
