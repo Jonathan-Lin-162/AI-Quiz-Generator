@@ -1,7 +1,7 @@
 const sendBtn = document.getElementById("textSentBtn");
 const quizViewContainer = document.getElementById("quiz-view-container");
 const quizPreviewContainer = document.getElementById("quiz-container");
-const time = document.getElementById("time").value;
+const loading = document.getElementById("loading");
 const difficultyLevel = {
   easy: "Easy - Recall basic facts and definitions.",
   medium: "Medium - Test understanding and application.",
@@ -23,6 +23,7 @@ function autogrow(el) {
 }
 
 async function generateQuiz() {
+  const time = document.getElementById("time").value;
   let text = document.getElementById("textInput").value.trim();
   let quizNumber = document.getElementById("quiz-number").value || 10;
   if (!text) return;
@@ -36,6 +37,8 @@ async function generateQuiz() {
       : "None (This is the first generation batch).";
 
   sendBtn.disabled = true;
+  loading.classList.remove("hidden");
+  quizPreviewContainer.classList.add("hidden");
 
   const questionType = document.getElementById("quiz-type").value;
   const mode = document.getElementById("mode").value;
@@ -106,6 +109,8 @@ ${cleanExclusionList}
     console.log(error);
   } finally {
     sendBtn.disabled = false;
+    loading.classList.add("hidden");
+    quizPreviewContainer.classList.remove("hidden");
   }
 }
 
@@ -126,4 +131,11 @@ function createPreviewBox(title, questions, currentBoxId) {
     window.location.href = `/renderQuiz?id=${currentBoxId}&source=local`;
   };
   quizPreviewContainer.appendChild(previewBox);
+
+  setTimeout(() => {
+    previewBox.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
+  }, 50);
 }

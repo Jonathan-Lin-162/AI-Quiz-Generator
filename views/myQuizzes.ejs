@@ -12,6 +12,25 @@
             <form id="edit-form" onsubmit="event.preventDefault();">
                 <input type="text" class="quizName" id="quiz-name" placeholder="Enter the name of your quiz" required>
                 <p id="warning-text"></p>
+                <div class="select-wrapper">
+                    <legdend class="timer">
+                        Time per Question: 
+                    </legdend>
+                <select name="time" id="time">
+                    <option value="10">10s</option>
+                    <option value="15">15s</option>
+                    <option value="20">20s</option>
+                    <option value="25">25s</option>
+                    <option value="30">30s</option>
+                    <option value="35">35s</option>
+                    <option value="40">40s</option>
+                    <option value="45">45s</option>
+                    <option value="50">50s</option>
+                    <option value="55">55s</option>
+                    <option value="60">60s</option>
+                </select>
+                <i class="fa-solid fa-chevron-down"></i>
+                </div>
                 <div class="overlay-btn">
                     <button type="button" class="cancelBtn" id="cancel-btn">Cancel</button>
                     <button type="submit" class="confirmBtn" id="confirm-btn">OK</button>

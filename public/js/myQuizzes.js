@@ -47,7 +47,7 @@ function createQuizCard(q, idx) {
         <span>📅 Saved on ${formattedDate}</span>
       </div>
       <div class="buttons">
-        <button class="edit-btn">Edit Name</button>
+        <button class="edit-btn">Edit</button>
         <button class="delete-btn">Delete</button>
       </div>
     </div>
@@ -132,6 +132,8 @@ cancelBtn.onclick = () => {
 confirmBtn.onclick = async (e) => {
   e.preventDefault();
   const title = quizName.value.trim();
+  const newTime = document.getElementById("time").value;
+
   if (title.length === 0) {
     warningText.innerHTML = `Please give a new name for the quiz!`;
     return;
@@ -147,11 +149,12 @@ confirmBtn.onclick = async (e) => {
 
   const payload = {
     title: title,
+    time: newTime,
     quizIndex: activeQuizIndex,
   };
 
   try {
-    const res = await fetch("/editingQuizName", {
+    const res = await fetch("/editingQuiz", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

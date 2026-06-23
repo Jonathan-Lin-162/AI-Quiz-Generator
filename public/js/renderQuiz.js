@@ -37,6 +37,7 @@ async function initQuiz() {
       if (!res.ok) throw new Error("Failed to retrieve quiz data from server.");
       const data = await res.json();
       questions = data.questions || [];
+      time = data.time || 30;
     } else {
       const rawData = JSON.parse(localStorage.getItem(`QuestionSuit${quizId}`));
       questions = rawData?.questions || rawData || [];
@@ -69,12 +70,18 @@ function loadQuestion() {
   // Reset control visibility states
   feedbackBox.className = "hidden";
   nextBtn.classList.add("hidden");
-  prevBtn.disabled = currentIdx === 0;
+  if (currentIdx === 0) {
+    prevBtn.disabled = true;
+    prevBtn.classList.add("disabled");
+  } else {
+    prevBtn.disabled = false;
+    prevBtn.classList.remove("disabled");
+  }
 
   // 2. Generate button selections
   q.options.forEach((opt, index) => {
     const btn = document.createElement("button");
-    btn.className = "option-item";
+    btn.className = "option-item notranslate";
     btn.innerText = opt;
     btn.onclick = () => selectOption(index);
     optionsBox.appendChild(btn);
@@ -228,6 +235,7 @@ async function saveQuiz() {
 
     const payload = {
       title: quizName.value,
+      time: time,
       questions: questions,
     };
 

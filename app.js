@@ -92,14 +92,14 @@ function shuffleArray(array) {
 app.get("/", (req, res) => {
   if (req.session.authenticated) {
     res.render("main", {
-      css: ["index", "header"],
-      js: [],
+      css: ["main", "header", "footer"],
+      js: ["theme"],
       authenticated: req.session.authenticated,
     });
   } else {
     res.render("index", {
-      css: ["index", "header"],
-      js: [],
+      css: ["index", "header", "footer"],
+      js: ["theme"],
       authenticated: req.session.authenticated,
     });
   }
@@ -110,16 +110,17 @@ app.get("/home", (req, res) => {
     return res.redirect("/");
   }
   res.render("home", {
-    css: ["home", "header"],
-    js: [],
+    css: ["home", "header", "footer"],
+    js: ["theme"],
     authenticated: req.session.authenticated,
+    page: "home",
   });
 });
 
 app.get("/login", (req, res) => {
   res.render("loginSignup", {
-    css: ["loginSignup", "header"],
-    js: ["loginSignup"],
+    css: ["loginSignup", "header", "footer"],
+    js: ["loginSignup", "theme"],
     authenticated: req.session.authenticated,
   });
 });
@@ -272,9 +273,10 @@ app.get("/create", (req, res) => {
     return res.redirect("/");
   }
   res.render("create", {
-    css: ["header", "create"],
-    js: ["create"],
+    css: ["header", "footer", "create"],
+    js: ["create", "theme"],
     authenticated: req.session.authenticated,
+    page: "create",
   });
 });
 
@@ -283,8 +285,8 @@ app.get("/renderQuiz", (req, res) => {
     return res.redirect("/");
   }
   res.render("renderQuiz", {
-    css: ["header", "renderQuiz"],
-    js: ["renderQuiz"],
+    css: ["header", "footer", "renderQuiz"],
+    js: ["renderQuiz", "theme"],
     authenticated: req.session.authenticated,
   });
 });
@@ -330,7 +332,7 @@ app.post("/quizGenerate", async (req, res) => {
 app.post("/savingQuiz", async (req, res) => {
   try {
     const userId = req.session.userId;
-    const { title, questions } = req.body;
+    const { title, time, questions } = req.body;
 
     if (!userId) {
       return res
@@ -340,6 +342,7 @@ app.post("/savingQuiz", async (req, res) => {
 
     const newQuizRecord = {
       title: title,
+      time: time,
       questions: questions,
       createdAt: new Date(),
     };
@@ -373,10 +376,11 @@ app.get("/myQuizzes", async (req, res) => {
   const results = await savedQuizzesCollection.findOne({ userId });
 
   res.render("myQuizzes", {
-    css: ["header", "myQuizzes"],
-    js: ["myQuizzes"],
+    css: ["header", "footer", "myQuizzes"],
+    js: ["myQuizzes", "theme"],
     results: JSON.stringify(results),
     authenticated: req.session.authenticated,
+    page: "myQuizzes",
   });
 });
 
@@ -411,13 +415,14 @@ app.get("/fetchingMongoDBdata/:quizIndex", async (req, res) => {
   }
 });
 
-app.post("/editingQuizName", async (req, res) => {
+app.post("/editingQuiz", async (req, res) => {
   try {
     if (!req.session.authenticated) {
       return res.redirect("/");
     }
 
     const userId = req.session.userId;
+    const time = req.body.time;
     const newTitle = req.body.title;
     const quizIndex = parseInt(req.body.quizIndex, 10);
 
@@ -428,11 +433,14 @@ app.post("/editingQuizName", async (req, res) => {
       });
     }
 
-    const updatePath = `quizzes.${quizIndex}.title`;
+    const updateTitlePath = `quizzes.${quizIndex}.title`;
+    const updateTimePath = `quizzes.${quizIndex}.time`;
 
     const result = await savedQuizzesCollection.updateOne(
       { userId },
-      { $set: { [updatePath]: newTitle.trim() } },
+      {
+        $set: { [updateTitlePath]: newTitle.trim(), [updateTimePath]: time },
+      },
     );
 
     if (result.matchedCount === 0) {
