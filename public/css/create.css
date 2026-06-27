@@ -183,7 +183,17 @@ body {
 .select-wrapper #second-dropdown {
   position: absolute;
   right: 14px;
-  top: 60%;
+  top: 58%;
+  pointer-events: none;
+  color: var(--icon);
+  font-size: 14px;
+}
+
+.select-wrapper #third-dropdown,
+#forth-dropdown {
+  position: absolute;
+  right: 14px;
+  top: 58%;
   pointer-events: none;
   color: var(--icon);
   font-size: 14px;
@@ -307,6 +317,10 @@ input::-webkit-inner-spin-button {
 
 .quiz-preview-box:hover span {
   transform: translateX(6px);
+}
+
+.audio {
+  display: none;
 }
 
 /* HTML: <div class="loader"></div> */

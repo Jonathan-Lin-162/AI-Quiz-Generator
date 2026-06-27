@@ -1,22 +1,50 @@
-<%- include("partials/header.ejs", {css: css}) %> 
-<h1 class="title">AI Quiz Generator</h1>
-<form action="/home" method="GET">
-<button class="cssbuttons-io-button">
-  Go Home
-  <div class="icon">
-    <svg
-      height="24"
-      width="24"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M0 0h24v24H0z" fill="none"></path>
-      <path
-        d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-        fill="currentColor"
-      ></path>
-    </svg>
+<%- include("partials/header.ejs", {css: css}) %>
+
+<div class="welcome-container">
+
+  <h1 class="title">Welcome Back 👋</h1>
+
+  <p class="subtitle">
+    Your AI Quiz Generator is ready. Create quizzes instantly and improve your learning experience.
+  </p>
+
+  <!-- Feature Cards -->
+  <div class="feature-grid">
+
+    <div class="feature-card">
+      ⚡ AI-Powered Quiz Generation
+    </div>
+
+    <div class="feature-card">
+      🎯 Custom Difficulty Levels
+    </div>
+
+    <div class="feature-card">
+      ⏱️ Timed Practice Mode
+    </div>
+
+    <div class="feature-card">
+      📊 Instant Feedback & Results
+    </div>
+
   </div>
-</button>
-</form>
+
+  <!-- CTA Button -->
+  <form action="/home" method="GET" class="cta-form">
+    <button class="cssbuttons-io-button">
+      Go Home
+      <div class="icon">
+        <svg height="24" width="24" viewBox="0 0 24 24">
+          <path d="M0 0h24v24H0z" fill="none"></path>
+          <path
+            d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </div>
+    </button>
+  </form>
+
+</div>
+
 <%- include("partials/footer.ejs") %>

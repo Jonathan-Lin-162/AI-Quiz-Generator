@@ -1,10 +1,47 @@
-<%- include("partials/header.ejs", {css: css}) %> 
-<h1 class="welcome-message">Welcome!</h1>
-<h4 class="subtitle">Let's create some quizzes!</h4>
-<!-- From Uiverse.io by CristianMontoya98 --> 
-<div class="create-btn-container">
+<%- include("partials/header.ejs", {css: css}) %>
+
+<div class="create-page">
+
+  <h1 class="welcome-message">Welcome 👋</h1>
+
+  <h4 class="subtitle">
+    Ready to generate your AI-powered quiz?
+  </h4>
+
+  <p class="description">
+    Click create to start building a personalized quiz. You'll be able to choose difficulty, timer, background music, and question style in the next step.
+  </p>
+
+  <!-- Small preview cards -->
+  <div class="preview-grid">
+
+    <div class="preview-card">
+      ⚡ AI generates questions instantly
+    </div>
+
+    <div class="preview-card">
+      🎯 Choose difficulty & topic
+    </div>
+
+    <div class="preview-card">
+      ⏱️ Add timer-based challenges
+    </div>
+
+    <div class="preview-card">
+        🎧Add background music for the quiz
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="create-btn-container">
     <form action="/create" method="GET">
-        <button class="create-btn"> Create</button>
+      <button class="create-btn">
+        Create
+      </button>
     </form>
+  </div>
+
 </div>
+
 <%- include("partials/footer.ejs") %>

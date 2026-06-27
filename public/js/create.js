@@ -2,6 +2,9 @@ const sendBtn = document.getElementById("textSentBtn");
 const quizViewContainer = document.getElementById("quiz-view-container");
 const quizPreviewContainer = document.getElementById("quiz-container");
 const loading = document.getElementById("loading");
+const bgMusic = document.getElementById("bg-music");
+const audio = document.getElementById("audio");
+const audioSource = document.getElementById("audio-source");
 const difficultyLevel = {
   easy: "Easy - Recall basic facts and definitions.",
   medium: "Medium - Test understanding and application.",
@@ -21,6 +24,48 @@ function autogrow(el) {
   el.style.height = "auto";
   el.style.height = Math.min(el.scrollHeight, 96) + "px";
 }
+
+// A persistent controller to halt active audio initialization safely
+let playPromise = null;
+
+bgMusic.addEventListener("change", async (e) => {
+  const selectedMusic = e.target.value;
+
+  // 1. Handle empty selection
+  if (!selectedMusic) {
+    audio.pause();
+    audioSource.setAttribute("src", "");
+    audio.load();
+    return;
+  }
+
+  // 2. Pause existing playback safely
+  audio.pause();
+
+  // 3. Update the tracking sources
+  audioSource.setAttribute(
+    "src",
+    `/bg music/${encodeURIComponent(selectedMusic)}.mp3`,
+  );
+
+  // 4. Force browser media engine layout reset
+  audio.load();
+
+  // 5. Play only when the browser confirms the source is buffered
+  audio.addEventListener(
+    "canplay",
+    () => {
+      playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          // Catch block prevents console crashes from browser security blockades
+          console.info("Playback layout deferral note:", error.message);
+        });
+      }
+    },
+    { once: true },
+  ); // { once: true } auto-removes the listener after firing
+});
 
 async function generateQuiz() {
   const time = document.getElementById("time").value;

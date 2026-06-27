@@ -1,22 +1,55 @@
-<%- include("partials/header.ejs", {css: css}) %> 
-<h1>AI Quiz Generator</h1>
-<form action="/login" method="GET">
-<button class="cssbuttons-io-button">
-  Get Started
-  <div class="icon">
-    <svg
-      height="24"
-      width="24"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M0 0h24v24H0z" fill="none"></path>
-      <path
-        d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-        fill="currentColor"
-      ></path>
-    </svg>
+<%- include("partials/header.ejs", {css: css}) %>
+
+<div class="hero-container">
+
+  <!-- HERO SECTION -->
+  <div class="hero">
+    <h1 class="title">AI Quiz Generator</h1>
+
+    <p class="subtitle">
+      Turn any topic into a smart quiz in seconds using AI.
+      Learn faster, test yourself better, and study more efficiently.
+    </p>
+
+    <form action="/login" method="GET">
+      <button class="cssbuttons-io-button">
+        Get Started
+        <div class="icon">
+          <svg height="24" width="24" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"></path>
+            <path
+              d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+              fill="currentColor"
+            />
+          </svg>
+        </div>
+      </button>
+    </form>
   </div>
-</button>
-</form>
+
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <h2>How it works</h2>
+
+    <div class="steps">
+      <div class="card">1. Enter any topic</div>
+      <div class="card">2. AI generates questions</div>
+      <div class="card">3. Start practicing instantly</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section">
+    <h2>Why use this?</h2>
+
+    <div class="features">
+      <div class="feature-card">⚡ Instant quiz generation</div>
+      <div class="feature-card">🧠 AI-powered questions</div>
+      <div class="feature-card">🎯 Multiple question types</div>
+      <div class="feature-card">📊 Improve learning speed</div>
+    </div>
+  </div>
+
+</div>
+
 <%- include("partials/footer.ejs") %>

@@ -42,6 +42,23 @@
             >
 
     </div>
+
+    <div class="select-wrapper">
+        <label>Background Music: </label>
+        <select class="bg-music" id="bg-music">
+            <option value="">-- Choose a background music --</option>
+            <option value="All In - Everet Almond">All In - Everet Almond</option>
+            <option value="Comedy Music">Comeday Music</option>
+            <option value="Quiz Background Loop">Quiz Background Music</option>
+            <option value="Quiz Countdown">Quiz Countdown</option>
+            <option value="Quiz Evaluation Loop">Quiz Evaluation Loop</option>
+            <option value="Quiz Master">Quiz Master</option>
+            <option value="Quiz Music">Quiz Music</option>
+            <option value="Sergio's Magic Dustbin">Sergio's Magic Dustbin</option>
+        </select>
+        <i class="fa-solid fa-chevron-down" id="third-dropdown"></i>
+    </div>
+
     <div class="select-wrapper">
     <label>Question Type:</label>
     <select class="quiz-type" id="quiz-type">
@@ -49,7 +66,7 @@
         <option value="true-false">True / False Only</option>
         <option value="mix" selected>Mix of Both Types</option>
     </select>
-    <i class="fa-solid fa-chevron-down" id="second-dropdown"></i>
+    <i class="fa-solid fa-chevron-down" id="forth-dropdown"></i>
     </div>
 </div>
 
@@ -64,6 +81,11 @@
     ></textarea>
     <button class="text-send-btn" id="textSentBtn" onclick="generateQuiz()">➤</button>
 </div>
+<br><br>
+<audio controls class="audio" id="audio">
+  <source id="audio-source" src="" type="audio/ogg">
+  Your browser does not support the audio element.
+</audio>
 
 <div class="loading hidden" id="loading">
     <div class="loader"></div>
