@@ -12,6 +12,7 @@
   --bg: #f8f9fa;
   --surface: #ffffff;
   --surface-2: #f4f6f9;
+  --gradient-bg: rgba(93, 24, 220, 0.08);
 
   --text: #000000;
   --text-secondary: #666;
@@ -33,6 +34,7 @@ body.dark-mode {
   --bg: #0f1115;
   --surface: #181b22;
   --surface-2: #14161b;
+  --gradient-bg: rgba(201, 185, 154, 0.48);
 
   --text: #f5f5f5;
   --text-secondary: #b8bcc8;
@@ -53,9 +55,14 @@ body.dark-mode {
    GLOBAL
 ========================= */
 body {
-  background:
-    radial-gradient(circle at top, rgba(93, 24, 220, 0.08), transparent 40%),
-    var(--bg);
+  background-color: var(--bg);
+  background-image: radial-gradient(
+    circle at top,
+    var(--gradient-bg),
+    transparent 40%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 500px;
   font-family: "Inter", sans-serif;
   color: var(--text);
 }

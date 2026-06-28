@@ -370,6 +370,10 @@ body {
   animation: blink 0.5s infinite;
 }
 
+.audio {
+  display: none;
+}
+
 @keyframes pop-in {
   from {
     transform: scale(0.5);

@@ -332,7 +332,7 @@ app.post("/quizGenerate", async (req, res) => {
 app.post("/savingQuiz", async (req, res) => {
   try {
     const userId = req.session.userId;
-    const { title, time, questions } = req.body;
+    const { title, time, questions, music } = req.body;
 
     if (!userId) {
       return res
@@ -344,6 +344,7 @@ app.post("/savingQuiz", async (req, res) => {
       title: title,
       time: time,
       questions: questions,
+      music: music,
       createdAt: new Date(),
     };
 
@@ -425,6 +426,7 @@ app.post("/editingQuiz", async (req, res) => {
     const time = req.body.time;
     const newTitle = req.body.title;
     const quizIndex = parseInt(req.body.quizIndex, 10);
+    const music = req.body.music;
 
     if (isNaN(quizIndex) || !newTitle || newTitle.trim().length === 0) {
       return res.status(400).json({
@@ -435,11 +437,16 @@ app.post("/editingQuiz", async (req, res) => {
 
     const updateTitlePath = `quizzes.${quizIndex}.title`;
     const updateTimePath = `quizzes.${quizIndex}.time`;
+    const updateMusicPath = `quizzes.${quizIndex}.music`;
 
     const result = await savedQuizzesCollection.updateOne(
       { userId },
       {
-        $set: { [updateTitlePath]: newTitle.trim(), [updateTimePath]: time },
+        $set: {
+          [updateTitlePath]: newTitle.trim(),
+          [updateTimePath]: time,
+          [updateMusicPath]: music,
+        },
       },
     );
 

@@ -9,10 +9,55 @@ const warningText = document.getElementById("warning-text");
 const overlayDeleteBox = document.getElementById("overlay-delete");
 const yesBtn = document.getElementById("yes-btn");
 const noBtn = document.getElementById("no-btn");
+const bgMusic = document.getElementById("bg-music");
+const audio = document.getElementById("audio");
+const audioSource = document.getElementById("audio-source");
 
 let activeCardElement = null;
 let activeQuizData = null;
 let activeQuizIndex = null;
+
+let playPromise = null;
+let selectedMusic = "";
+
+bgMusic.addEventListener("change", async (e) => {
+  selectedMusic = e.target.value;
+
+  // 1. Handle empty selection
+  if (!selectedMusic) {
+    audio.pause();
+    audioSource.setAttribute("src", "");
+    audio.load();
+    return;
+  }
+
+  // 2. Pause existing playback safely
+  audio.pause();
+
+  // 3. Update the tracking sources
+  audioSource.setAttribute(
+    "src",
+    `/bg music/${encodeURIComponent(selectedMusic)}.mp3`,
+  );
+
+  // 4. Force browser media engine layout reset
+  audio.load();
+
+  // 5. Play only when the browser confirms the source is buffered
+  audio.addEventListener(
+    "canplay",
+    () => {
+      playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          // Catch block prevents console crashes from browser security blockades
+          console.info("Playback layout deferral note:", error.message);
+        });
+      }
+    },
+    { once: true },
+  ); // { once: true } auto-removes the listener after firing
+});
 
 if (!results || !results.quizzes || results.quizzes.length === 0) {
   message.innerHTML = `
@@ -58,7 +103,7 @@ function createQuizCard(q, idx) {
 
   // Bind the index dynamically to the click navigation link
   quizCard.onclick = () => {
-    window.location.href = `/renderQuiz?id=${idx}&source=db`;
+    window.location.href = `/renderQuiz?id=${idx}&source=db&music=${q.music}`;
   };
 
   const editBtn = quizCard.querySelector(".edit-btn");
@@ -127,6 +172,7 @@ function recalculateCardIndexes() {
 
 cancelBtn.onclick = () => {
   overlayEditBox.classList.remove("show");
+  audio.pause();
 };
 
 confirmBtn.onclick = async (e) => {
@@ -139,11 +185,6 @@ confirmBtn.onclick = async (e) => {
     return;
   }
 
-  if (activeQuizData && title === activeQuizData.title) {
-    warningText.innerHTML = `Please choose a different name from the current one!`;
-    return;
-  }
-
   confirmBtn.disabled = true;
   confirmBtn.innerText = "Saving...";
 
@@ -151,6 +192,7 @@ confirmBtn.onclick = async (e) => {
     title: title,
     time: newTime,
     quizIndex: activeQuizIndex,
+    music: selectedMusic,
   };
 
   try {
@@ -174,6 +216,7 @@ confirmBtn.onclick = async (e) => {
   } finally {
     confirmBtn.disabled = false;
     confirmBtn.innerText = "OK";
+    audio.pause();
   }
 };
 

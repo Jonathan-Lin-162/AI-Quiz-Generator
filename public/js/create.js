@@ -27,9 +27,10 @@ function autogrow(el) {
 
 // A persistent controller to halt active audio initialization safely
 let playPromise = null;
+let selectedMusic = "";
 
 bgMusic.addEventListener("change", async (e) => {
-  const selectedMusic = e.target.value;
+  selectedMusic = e.target.value;
 
   // 1. Handle empty selection
   if (!selectedMusic) {
@@ -173,7 +174,7 @@ function createPreviewBox(title, questions, currentBoxId) {
   `;
 
   previewBox.onclick = () => {
-    window.location.href = `/renderQuiz?id=${currentBoxId}&source=local`;
+    window.location.href = `/renderQuiz?id=${currentBoxId}&source=local&music=${selectedMusic}`;
   };
   quizPreviewContainer.appendChild(previewBox);
 

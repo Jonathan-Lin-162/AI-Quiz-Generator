@@ -9,6 +9,7 @@ if (!quizId) {
 let questions = [];
 let currentIdx = 0;
 let userSelections = [];
+let music = "";
 
 // DOM Selectors
 const questionTxt = document.getElementById("question-text");
@@ -26,6 +27,8 @@ const saveBtn = document.querySelector(".save-btn");
 const retakeBtn = document.querySelector(".retake");
 const timer = document.getElementById("timer");
 const timerContainer = document.getElementById("timer-container");
+const audio = document.getElementById("audio");
+const audioSource = document.getElementById("audio-source");
 let timerInterval = null;
 let timeLeft = 30;
 let time = 30;
@@ -38,8 +41,12 @@ async function initQuiz() {
       const data = await res.json();
       questions = data.questions || [];
       time = data.time || 30;
+      music = data.music || "";
+      console.log(music);
     } else {
       const rawData = JSON.parse(localStorage.getItem(`QuestionSuit${quizId}`));
+      music = urlParams.get("music") || "";
+      console.log(music);
       questions = rawData?.questions || rawData || [];
       time = rawData.time || 30;
     }
@@ -49,11 +56,30 @@ async function initQuiz() {
     }
 
     userSelections = new Array(questions.length).fill(undefined);
+    loadMusic();
     loadQuestion();
   } catch (error) {
     console.error("Quiz Initialization Error:", error);
     questionTxt.innerText = "Error loading quiz data. Please try again.";
   }
+}
+
+function loadMusic() {
+  audioSource.setAttribute("src", `/bg music/${encodeURIComponent(music)}.mp3`);
+  audio.load();
+  audio.addEventListener(
+    "canplay",
+    () => {
+      playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          // Catch block prevents console crashes from browser security blockades
+          console.info("Playback layout deferral note:", error.message);
+        });
+      }
+    },
+    { once: true },
+  );
 }
 
 function loadQuestion() {
@@ -237,6 +263,7 @@ async function saveQuiz() {
       title: quizName.value,
       time: time,
       questions: questions,
+      music: music,
     };
 
     try {
