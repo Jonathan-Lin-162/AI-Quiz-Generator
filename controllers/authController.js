@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const User = require("../models/User");
+const User = require("../models/user");
 const displayMessage = require("../utils/displayMessage");
 const loginSchema = require("../validation/loginSchema");
 const signupSchema = require("../validation/signupSchema");
