@@ -83,7 +83,7 @@ bgMusic.addEventListener("change", async (e) => {
 
 // QUIZ GENERATION CORE LOGIC
 async function generateQuiz() {
-  const time = tiemInput.value;
+  const time = timeInput.value;
   const text = textInput.value.trim();
   const quizNumber = quizNumberInput.value || 10;
 
