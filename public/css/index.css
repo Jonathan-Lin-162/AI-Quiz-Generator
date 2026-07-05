@@ -4,9 +4,6 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   THEME VARIABLES
-========================= */
 :root {
   /* Light Mode */
   --bg: #f8f9fa;
@@ -29,8 +26,8 @@
   --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
 }
 
-/* Dark Mode */
 body.dark-mode {
+  /* Dark Mode */
   --bg: #0f1115;
   --surface: #181b22;
   --surface-2: #14161b;
@@ -51,9 +48,6 @@ body.dark-mode {
   --card-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
 }
 
-/* =========================
-   GLOBAL
-========================= */
 body {
   background-color: var(--bg);
   background-image: radial-gradient(
@@ -67,9 +61,6 @@ body {
   color: var(--text);
 }
 
-/* =========================
-   HERO SECTION
-========================= */
 .hero-container {
   max-width: 1000px;
   margin: 0 auto;
@@ -96,9 +87,6 @@ body {
   line-height: 1.6;
 }
 
-/* =========================
-   SECTIONS
-========================= */
 .section {
   margin-top: 70px;
   text-align: center;
@@ -110,9 +98,6 @@ body {
   color: var(--text);
 }
 
-/* =========================
-   STEPS
-========================= */
 .steps {
   display: flex;
   justify-content: center;
@@ -135,9 +120,6 @@ body {
   border-color: var(--accent);
 }
 
-/* =========================
-   FEATURES
-========================= */
 .features {
   display: flex;
   justify-content: center;
@@ -160,18 +142,12 @@ body {
   border-color: var(--accent);
 }
 
-/* =========================
-   TITLE (fallback)
-========================= */
 h1 {
   text-align: center;
   margin: 20px auto;
   color: var(--text);
 }
 
-/* =========================
-   BUTTON (Get Started)
-========================= */
 .cssbuttons-io-button {
   margin: auto;
   background: var(--btn-bg);

@@ -7,7 +7,7 @@
 }
 
 :root {
-  /* Light Theme */
+  /* Light mode */
   --bg: #f8f9fa;
   --surface: #ffffff;
   --border: rgba(0, 0, 0, 0.08);
@@ -31,6 +31,7 @@
 }
 
 body.dark-mode {
+  /* Dark mode */
   --bg: #0f1115;
   --surface: #232730;
 
@@ -75,7 +76,6 @@ body {
   padding: 2rem 1rem;
 }
 
-/* subtle grain overlay */
 body::before {
   content: "";
   position: fixed;
@@ -102,13 +102,12 @@ body::before {
 }
 
 .card:hover {
-  transform: translateY(-6px); /* Elevates the box card upward slightly */
+  transform: translateY(-6px);
   box-shadow:
     0 20px 30px -10px var(--shadow-1),
-    0 10px 15px -5px var(--shadow-2); /* Adds a soft violet depth shadow shadow glow */
+    0 10px 15px -5px var(--shadow-2);
 }
 
-/* top accent line */
 .card::before {
   content: "";
   display: block;
@@ -246,7 +245,6 @@ body::before {
   background: var(--input-focus-bg);
 }
 
-/* password strength */
 .bars {
   display: flex;
   gap: 4px;
@@ -309,13 +307,11 @@ body::before {
   font-weight: 500;
 }
 
-/* --- Fix absolute icon positioning to break cleanly on all devices --- */
 .field {
   display: flex;
   flex-direction: column;
 }
 
-/* Restructures the input parent wrapper to use standard vertical alignments */
 .field-input-wrapper {
   position: relative;
   width: 100%;
@@ -323,10 +319,8 @@ body::before {
   align-items: center;
 }
 
-/* Safely centers eye icons vertically inside the wrapper regardless of text scale */
-
 .field i:active {
-  transform: translateY(-50%) scale(0.9); /* Maintains vertical center point when pressed */
+  transform: translateY(-50%) scale(0.9);
 }
 
 .card,
@@ -347,18 +341,15 @@ body::before {
 
 /* --- Mobile Viewport Responsiveness Query --- */
 @media (max-width: 480px) {
-  /* 1. Pull the body container closer to the edge for a wider tap zone on micro displays */
   .main {
     padding: 1rem 0.5rem;
-    min-height: 100vh; /* Expands to fill full screen real-estate height cleanly */
+    min-height: 100vh;
   }
 
-  /* 2. Soften interior padding blocks inside the active form panels */
   .body {
     padding: 1.5rem;
   }
 
-  /* 3. Scale text elements down to preserve layout lines without awkward text-wrapping */
   .logo {
     font-size: 20px;
   }
@@ -368,10 +359,9 @@ body::before {
     margin-bottom: 1.25rem;
   }
 
-  /* 4. Increase form element sizing slightly for easier thumb interaction */
   .field input {
     padding: 12px 14px;
-    font-size: 15px; /* Prevents iOS Safari auto-zoom on input focus */
+    font-size: 15px;
   }
 
   .tab {
@@ -380,7 +370,7 @@ body::before {
   }
 
   .btn {
-    padding: 16px 20px; /* Thicker touch point profile */
+    padding: 16px 20px;
     font-size: 15px;
   }
 }

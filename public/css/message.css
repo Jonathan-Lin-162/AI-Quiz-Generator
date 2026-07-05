@@ -1,0 +1,54 @@
+.message-wrapper {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg);
+  transition: background 0.3s ease;
+}
+
+.message-card {
+  background: var(--surface);
+  padding: 40px 30px;
+  border-radius: 16px;
+
+  box-shadow: var(--card-shadow);
+  text-align: center;
+  width: 90%;
+  max-width: 420px;
+
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.message-icon {
+  font-size: 40px;
+  color: var(--accent);
+  margin-bottom: 15px;
+}
+
+.message-text {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: var(--text);
+}
+
+.message-btn {
+  display: inline-block;
+  padding: 10px 20px;
+
+  background: var(--accent);
+  color: var(--btn-text);
+
+  border-radius: 8px;
+  text-decoration: none;
+
+  transition: 0.2s ease;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.message-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}

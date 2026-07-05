@@ -1,85 +1,88 @@
-const results = window.results;
-const cardBox = document.getElementById("card-box");
-const message = document.getElementById("message");
-const confirmBtn = document.getElementById("confirm-btn");
-const cancelBtn = document.getElementById("cancel-btn");
-const overlayEditBox = document.getElementById("overlay-edit");
-const quizName = document.getElementById("quiz-name");
-const warningText = document.getElementById("warning-text");
-const overlayDeleteBox = document.getElementById("overlay-delete");
-const yesBtn = document.getElementById("yes-btn");
-const noBtn = document.getElementById("no-btn");
-const bgMusic = document.getElementById("bg-music");
-const audio = document.getElementById("audio");
-const audioSource = document.getElementById("audio-source");
+// DOM SELECTORS
+// Frequently used DOM elements
+const el = {
+  cardBox: document.getElementById("card-box"),
+  message: document.getElementById("message"),
 
-let activeCardElement = null;
-let activeQuizData = null;
-let activeQuizIndex = null;
+  overlayEdit: document.getElementById("overlay-edit"),
+  overlayDelete: document.getElementById("overlay-delete"),
 
-let playPromise = null;
-let selectedMusic = "";
+  quizName: document.getElementById("quiz-name"),
+  warningText: document.getElementById("warning-text"),
+  time: document.getElementById("time"),
 
-bgMusic.addEventListener("change", async (e) => {
-  selectedMusic = e.target.value;
+  confirmBtn: document.getElementById("confirm-btn"),
+  cancelBtn: document.getElementById("cancel-btn"),
 
-  // 1. Handle empty selection
-  if (!selectedMusic) {
-    audio.pause();
-    audioSource.setAttribute("src", "");
-    audio.load();
-    return;
+  yesBtn: document.getElementById("yes-btn"),
+  noBtn: document.getElementById("no-btn"),
+
+  bgMusic: document.getElementById("bg-music"),
+  audio: document.getElementById("audio"),
+  audioSource: document.getElementById("audio-source"),
+};
+
+// APPLICATION STATE
+const state = {
+  results: window.results, // Quiz data passed from backend
+  activeCardElement: null, // Currently selected card element
+  activeQuizData: null, // Currently selected quiz object
+  activeQuizIndex: null, // Current quiz index in array
+  selectedMusic: "", // Music selected in edit modal
+};
+
+// INITIAL PAGE RENDERING
+// Display empty state if no quizzes exist
+function init() {
+  if (!state.results || state.results.quizzes.length === 0) {
+    showEmptyState();
+  } else {
+    // Clear placeholder message
+    el.message.innerText = "";
+
+    // Generate a card for every saved quiz
+    state.results.quizzes.forEach((q, idx) => {
+      createQuizCard(q, idx);
+    });
   }
-
-  // 2. Pause existing playback safely
-  audio.pause();
-
-  // 3. Update the tracking sources
-  audioSource.setAttribute(
-    "src",
-    `/bg music/${encodeURIComponent(selectedMusic)}.mp3`,
-  );
-
-  // 4. Force browser media engine layout reset
-  audio.load();
-
-  // 5. Play only when the browser confirms the source is buffered
-  audio.addEventListener(
-    "canplay",
-    () => {
-      playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          // Catch block prevents console crashes from browser security blockades
-          console.info("Playback layout deferral note:", error.message);
-        });
-      }
-    },
-    { once: true },
-  ); // { once: true } auto-removes the listener after firing
-});
-
-if (!results || !results.quizzes || results.quizzes.length === 0) {
-  message.innerHTML = `
-  You haven't saved any quizzes yet!
-  <div class="create-btn-container">
-    <form action="/create" method="GET">
-        <button class="create-btn"> Create One</button>
-    </form>
-</div>`;
-} else {
-  message.innerText = "";
-
-  results.quizzes.forEach((q, idx) => {
-    createQuizCard(q, idx);
-  });
 }
 
-// Helper function to build a card and cleanly bind its up-to-date index references
+// AUDIO HELPERS
+// Stop current audio playback and reset source
+function stopAudio() {
+  el.audio.pause();
+  el.audioSource.src = "";
+  el.audio.load();
+}
+
+// Load and play selected background music
+function playAudio(name) {
+  el.audio.pause();
+
+  el.audioSource.src = `/bg music/${encodeURIComponent(name)}.mp3`;
+  el.audio.load();
+
+  el.audio.addEventListener(
+    "canplay",
+    () => {
+      const p = el.audio.play();
+      // Prevent autoplay-related console errors
+      if (p)
+        p.catch((error) => {
+          console.info("Playback layout deferral note:", error.message);
+        });
+    },
+    { once: true },
+  );
+}
+
+// QUIZ CARD CREATION
+// Create a single quiz card and bind all event listeners
 function createQuizCard(q, idx) {
   const quizCard = document.createElement("div");
   quizCard.className = "quizCard";
 
+  // Format MongoDB timestamp into a readable date
   const formattedDate = q.createdAt
     ? new Date(q.createdAt).toLocaleDateString()
     : "Unknown Date";
@@ -99,100 +102,137 @@ function createQuizCard(q, idx) {
   `;
 
   quizCard.querySelector(".quizTitle").textContent = q.title;
-  cardBox.appendChild(quizCard);
+  el.cardBox.appendChild(quizCard);
 
-  // Bind the index dynamically to the click navigation link
-  quizCard.onclick = () => {
+  bindCardEvents(quizCard, q, idx);
+}
+
+// Bind event to each card
+function bindCardEvents(card, q, idx) {
+  card.onclick = () => {
     window.location.href = `/renderQuiz?id=${idx}&source=db&music=${q.music}`;
   };
 
-  const editBtn = quizCard.querySelector(".edit-btn");
-  const deleteBtn = quizCard.querySelector(".delete-btn");
-
-  editBtn.onclick = (e) => {
+  // EDIT BUTTON
+  card.querySelector(".edit-btn").onclick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    activeCardElement = quizCard;
-    activeQuizData = q;
-    activeQuizIndex = idx;
-    warningText.innerHTML = "";
-    quizName.value = q.title;
-    overlayEditBox.classList.add("show");
+
+    state.activeCardElement = card;
+    state.activeQuizData = q;
+    state.activeQuizIndex = idx;
+
+    el.warningText.innerHTML = "";
+    el.quizName.value = q.title;
+
+    el.overlayEdit.classList.add("show");
   };
 
-  deleteBtn.onclick = (e) => {
+  // DELETE BUTTON
+  card.querySelector(".delete-btn").onclick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    activeCardElement = quizCard;
-    activeQuizIndex = idx;
-    overlayDeleteBox.classList.add("show");
-  };
 
-  // Attach the current valid array index straight onto the HTML element wrapper object
-  quizCard.dataset.currentIndex = idx;
+    state.activeCardElement = card;
+    state.activeQuizIndex = idx;
+
+    el.overlayDelete.classList.add("show");
+  };
 }
 
-// Function to realign all frontend elements to match MongoDB indexes perfectly after a deletion
+// Show message if empty
+function showEmptyState() {
+  el.message.innerHTML = `
+    You haven't saved any quizzes yet!
+    <div class="create-btn-container">
+      <form action="/create" method="GET">
+        <button class="create-btn">Create One</button>
+      </form>
+    </div>
+  `;
+}
+
+// REINDEX CARDS AFTER DELETION
+// Keep frontend indexes synchronized with MongoDB indexes
 function recalculateCardIndexes() {
-  const remainingCards = cardBox.querySelectorAll(".quizCard");
+  const remainingCards = el.cardBox.querySelectorAll(".quizCard");
 
   remainingCards.forEach((card, newIdx) => {
     card.dataset.currentIndex = newIdx;
 
-    // Update main card redirect click reference
+    // Update quiz navigation links
     card.onclick = () => {
       window.location.href = `/renderQuiz?id=${newIdx}&source=db`;
     };
 
-    // Re-bind the click events to pass the corrected index position to our global variables
     const editBtn = card.querySelector(".edit-btn");
     const deleteBtn = card.querySelector(".delete-btn");
 
+    // Rebind edit button
     editBtn.onclick = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      activeCardElement = card;
-      activeQuizIndex = newIdx;
-      // Re-fetch correct data object out of state if edited multiple times
-      if (results && results.quizzes) activeQuizData = results.quizzes[newIdx];
-      warningText.innerHTML = "";
-      quizName.value = card.querySelector(".quizTitle").textContent;
-      overlayEditBox.classList.add("show");
+      state.activeCardElement = card;
+      state.activeQuizIndex = newIdx;
+
+      // Fetch updated quiz data
+      if (state.results && state.results.quizzes)
+        state.activeQuizData = state.results.quizzes[newIdx];
+      el.warningText.innerHTML = "";
+      el.quizName.value = card.querySelector(".quizTitle").textContent;
+      el.overlayEdit.classList.add("show");
     };
 
+    // Rebind delete button
     deleteBtn.onclick = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      activeCardElement = card;
-      activeQuizIndex = newIdx;
-      overlayDeleteBox.classList.add("show");
+      state.activeCardElement = card;
+      state.activeQuizIndex = newIdx;
+      el.overlayDelete.classList.add("show");
     };
   });
 }
 
-cancelBtn.onclick = () => {
-  overlayEditBox.classList.remove("show");
-  audio.pause();
+// BACKGROUND MUSIC SELECTION
+el.bgMusic.addEventListener("change", async (e) => {
+  state.selectedMusic = e.target.value;
+
+  // Stop audio if user clears selection
+  if (!state.selectedMusic) {
+    stopAudio();
+    return;
+  }
+  playAudio(state.selectedMusic);
+});
+
+// EDIT OVERLAY CONTROLS
+// Close edit modal
+el.cancelBtn.onclick = () => {
+  el.overlayEdit.classList.remove("show");
+  el.audio.pause();
 };
 
-confirmBtn.onclick = async (e) => {
+// Save edited quiz
+el.confirmBtn.onclick = async (e) => {
   e.preventDefault();
-  const title = quizName.value.trim();
-  const newTime = document.getElementById("time").value;
+  const title = el.quizName.value.trim();
+  const newTime = el.time.value;
 
+  // Validate title input
   if (title.length === 0) {
-    warningText.innerHTML = `Please give a new name for the quiz!`;
+    el.warningText.innerHTML = `Please give a new name for the quiz!`;
     return;
   }
 
-  confirmBtn.disabled = true;
-  confirmBtn.innerText = "Saving...";
+  el.confirmBtn.disabled = true;
+  el.confirmBtn.innerText = "Saving...";
 
   const payload = {
     title: title,
     time: newTime,
-    quizIndex: activeQuizIndex,
-    music: selectedMusic,
+    quizIndex: state.activeQuizIndex,
+    music: state.selectedMusic,
   };
 
   try {
@@ -202,11 +242,12 @@ confirmBtn.onclick = async (e) => {
       body: JSON.stringify(payload),
     });
     const data = await res.json();
+    // Update frontend immediately without page refresh
     if (res.ok && data.success) {
-      overlayEditBox.classList.remove("show");
-      if (activeCardElement && activeQuizData) {
-        activeCardElement.querySelector(".quizTitle").textContent = title;
-        activeQuizData.title = title;
+      el.overlayEdit.classList.remove("show");
+      if (state.activeCardElement && state.activeQuizData) {
+        state.activeCardElement.querySelector(".quizTitle").textContent = title;
+        state.activeQuizData.title = title;
       }
     } else {
       throw new Error(data.error || "Database rejection encountered");
@@ -214,52 +255,50 @@ confirmBtn.onclick = async (e) => {
   } catch (error) {
     console.error("Failed to upload save packet:", error);
   } finally {
-    confirmBtn.disabled = false;
-    confirmBtn.innerText = "OK";
-    audio.pause();
+    el.confirmBtn.disabled = false;
+    el.confirmBtn.innerText = "OK";
+    el.audio.pause();
   }
 };
 
-noBtn.onclick = () => {
-  overlayDeleteBox.classList.remove("show");
+// DELETE OVERLAY CONTROLS
+// Close delete modal
+el.noBtn.onclick = () => {
+  el.overlayDelete.classList.remove("show");
 };
 
-yesBtn.onclick = async () => {
-  yesBtn.disabled = true;
-  yesBtn.innerText = "Deleting...";
+// Confirm deletion
+el.yesBtn.onclick = async () => {
+  el.yesBtn.disabled = true;
+  el.yesBtn.innerText = "Deleting...";
   try {
     const res = await fetch("/deletingQuiz", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ quizIndex: activeQuizIndex }),
+      body: JSON.stringify({ quizIndex: state.activeQuizIndex }),
     });
     const data = await res.json();
     if (res.ok && data.success) {
-      activeCardElement.style.transition = "all 0.3s ease";
-      activeCardElement.style.opacity = "0";
-      activeCardElement.style.transform = "scale(0.9)";
-      overlayDeleteBox.classList.remove("show");
+      // Animate card removal
+      state.activeCardElement.style.transition = "all 0.3s ease";
+      state.activeCardElement.style.opacity = "0";
+      state.activeCardElement.style.transform = "scale(0.9)";
+      el.overlayDelete.classList.remove("show");
 
       setTimeout(() => {
-        activeCardElement.remove();
+        state.activeCardElement.remove();
 
-        // 1. Keep frontend local array data aligned with MongoDB's array length modifications
-        if (results && results.quizzes) {
-          results.quizzes.splice(activeQuizIndex, 1);
+        // Keep frontend data aligned with MongoDB
+        if (state.results && state.results.quizzes) {
+          state.results.quizzes.splice(state.activeQuizIndex, 1);
         }
 
-        // 2. FIXED: Re-index remaining elements to prevent multi-delete mismatches
+        // Recalculate all remaining indexes
         recalculateCardIndexes();
 
-        // 3. Fallback empty state handler check
-        if (cardBox.children.length === 1) {
-          message.innerHTML = `
-                  You haven't saved any quizzes yet!
-                  <div class="create-btn-container">
-                    <form action="/create" method="GET">
-                      <button class="create-btn"> Create One</button>
-                    </form>
-                  </div>`;
+        // Show empty state if no quizzes remain
+        if (el.cardBox.children.length === 1) {
+          showEmptyState();
         }
       }, 300);
     } else {
@@ -271,7 +310,9 @@ yesBtn.onclick = async () => {
     console.error("Failed to execute deletion operation:", error);
     alert(`Could not delete quiz: ${error.message}`);
   } finally {
-    yesBtn.disabled = false;
-    yesBtn.innerText = "Yes";
+    el.yesBtn.disabled = false;
+    el.yesBtn.innerText = "Yes";
   }
 };
+
+init();

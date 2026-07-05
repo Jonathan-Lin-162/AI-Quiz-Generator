@@ -44,7 +44,6 @@ body.dark-mode {
   --success: #7bd99a;
 }
 
-/* Modern Reset & Global Styles */
 body {
   box-sizing: border-box;
   padding: 0;
@@ -54,11 +53,6 @@ body {
   color: var(--text);
 }
 
-/* 
-  1. Responsive Grid Container
-  Automatically arranges cards side-by-side on desktop 
-  and stacks them neatly into 1 column on mobile phones.
-*/
 .cardBox {
   width: 60%;
   margin: 40px auto;
@@ -69,11 +63,6 @@ body {
   margin-top: 10px;
 }
 
-/* 
-  2. Sleek Quiz Card Layout 
-  Removed the fixed height so titles never overflow.
-  Added a subtle box-shadow and transition animations.
-*/
 .quizCard {
   margin-bottom: 20px;
   background-color: var(--surface);
@@ -96,14 +85,12 @@ body {
   text-align: center;
 }
 
-/* Hover Effect: Card gently lifts up and shifts to your primary theme color */
 .quizCard:hover {
   transform: translateY(-5px);
   border-color: var(--accent);
   box-shadow: var(--card-shadow-hover);
 }
 
-/* Elegant left accent bar using your primary theme color */
 .quizCard::before {
   content: "";
   position: absolute;
@@ -115,9 +102,6 @@ body {
   opacity: 0.7;
 }
 
-/* 
-  3. Typography Styles
-*/
 .quizTitle {
   font-size: 1.25rem;
   font-weight: 600;
@@ -126,7 +110,6 @@ body {
   line-height: 1.4;
 }
 
-/* Optional: Add a metadata snippet under the title if you want to track it later */
 .quizMeta {
   font-size: 0.85rem;
   color: var(--text-secondary);
@@ -307,12 +290,10 @@ body {
   font-size: 14px;
 }
 
-/* --- Interactive Hover State --- */
 .select-wrapper select:hover {
   background: var(--input-hover);
 }
 
-/* --- Active Focus Glow State --- */
 .select-wrapper select:focus {
   background: var(--surface);
   border-color: var(--accent);
@@ -379,48 +360,42 @@ body {
 
 /* --- Mobile Viewport Responsiveness Query --- */
 @media (max-width: 768px) {
-  /* 1. Expand the card wrapper box to take full fluid width with safe margins */
   .cardBox {
     width: 90%;
     margin: 20px auto;
   }
 
-  /* 2. Unstack metadata text and operational buttons into a vertical row layout */
   .information-container {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
   }
 
-  /* 3. Reset the artificial button height shifts so they stay perfectly inside the card bounding area */
   .buttons {
-    transform: none; /* Wipes out the aggressive -20px desktop translation */
+    transform: none;
     display: flex;
     width: 100%;
     gap: 10px;
   }
 
-  /* 4. Force individual utility action buttons to expand equally side-by-side */
   .edit-btn,
   .delete-btn {
     flex: 1;
     text-align: center;
-    padding: 10px 12px; /* Marginally chunkier dimensions for clean thumb activation targets */
+    padding: 10px 12px;
     font-size: 14px;
   }
 
-  /* 5. Scale typography sizes so long titles do not wrap into multi-line fragments */
   .quizTitle {
     font-size: 1.15rem;
     margin-bottom: 8px;
   }
 
   .quizMeta {
-    margin-bottom: 0; /* Clear bottom margins since flexbox handles spacing dynamically now */
+    margin-bottom: 0;
     font-size: 0.8rem;
   }
 
-  /* 6. Tighten modal card presentation scales on ultra-narrow panels */
   .overlay-edit-box,
   .overlay-delete-box {
     padding: 24px 20px;

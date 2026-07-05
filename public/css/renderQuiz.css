@@ -64,7 +64,6 @@ body {
   font-family: "Segoe UI", sans-serif;
 }
 
-/* --- Progress Bar --- */
 .progress-wrapper {
   margin-bottom: 24px;
 }
@@ -92,7 +91,6 @@ body {
   transition: width 0.3s ease;
 }
 
-/* --- Option Cards --- */
 .option-item {
   width: 100%;
   padding: 14px 20px;
@@ -111,7 +109,6 @@ body {
   border-color: #d1d5db;
 }
 
-/* --- Interactive Feedback Colors --- */
 .option-item.correct {
   background: var(--success-bg) !important;
   border-color: var(--success) !important;
@@ -137,7 +134,6 @@ body {
   border-left: 5px solid var(--danger);
 }
 
-/* --- Summary Panel Styling --- */
 .summary-card {
   padding: 16px;
   color: black;
@@ -155,7 +151,6 @@ body {
   background: #fffbfa;
 }
 
-/* --- Utility Visibility classes --- */
 .hidden {
   display: none !important;
 }
@@ -397,40 +392,35 @@ body {
 
 /* --- Mobile Responsiveness Media Query --- */
 @media (max-width: 640px) {
-  /* 1. Expand layout viewport canvas boundaries on small phone screens */
   .quiz-view-container {
     width: 92%;
     margin: 16px auto;
-    padding: 20px 16px; /* Tightens container padding so content room is maximized */
+    padding: 20px 16px;
   }
 
-  /* 2. Unstack result button configurations and give them larger tap targets */
   .navigation-controls,
   .results-btn {
     flex-direction: column;
-    gap: 12px; /* Adds physical safety space between actionable objects */
+    gap: 12px;
     margin-top: 16px;
   }
 
-  /* 3. Force buttons to span full layout width for comfortable mobile tapping */
   .nav-btn,
   .create-btn,
   .save-btn,
   .retake-btn {
     width: 100%;
-    padding: 14px 20px; /* Chunkier thumb targets to improve phone accessibility */
+    padding: 14px 20px;
     text-align: center;
     font-size: 15px;
   }
 
-  /* 4. Optimize option items text wrap padding boundaries */
   .option-item {
     padding: 12px 16px;
     font-size: 15px;
     margin: 8px 0;
   }
 
-  /* 5. Scale down text labels slightly so long headers fit cleanly */
   #question-text {
     font-size: 1.2rem;
     line-height: 1.4;
@@ -440,7 +430,6 @@ body {
     font-size: 1.4rem;
   }
 
-  /* 6. Refine overlay modal presentation windows */
   .overlay-box {
     padding: 24px 20px;
   }
@@ -455,7 +444,7 @@ body {
 
   .confirmBtn,
   .cancelBtn {
-    flex: 1; /* Automatically split space equally across the modal row axis */
+    flex: 1;
     padding: 12px 16px;
     font-size: 14px;
     text-align: center;

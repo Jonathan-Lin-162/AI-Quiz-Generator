@@ -5,7 +5,7 @@ const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
 
 const MongoClient = require("mongodb").MongoClient;
-const atlasURI = `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/`;
-let database = new MongoClient(atlasURI, {});
+const atlasURL = `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/`;
+let database = new MongoClient(atlasURL, {});
 
 module.exports = { database };

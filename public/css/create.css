@@ -117,23 +117,19 @@ body {
   cursor: not-allowed;
 }
 
-/* --- Preference Settings Card Panel --- */
 .preference-settings {
   max-width: 400px;
-  margin: 40px auto; /* Centers the whole block horizontally */
+  margin: 40px auto;
   padding: 24px;
   background-color: var(--surface);
   border-radius: 14px;
-  box-shadow: 0 10px 25px var(--card-shadow); /* Soft outer glow */
-  border: 1px solid var(--border); /* Subtle brand purple border */
+  box-shadow: 0 10px 25px var(--card-shadow);
+  border: 1px solid var(--border);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-
-  /* Stacks the configuration layout vertically */
   display: flex;
   flex-direction: column;
 }
 
-/* --- Label Typography --- */
 .preference-settings label {
   font-size: 14px;
   font-weight: 600;
@@ -143,12 +139,10 @@ body {
   letter-spacing: 0.2px;
 }
 
-/* Removes top margin only on the very first label */
 .preference-settings label:first-of-type {
   margin-top: 0;
 }
 
-/* --- Dropdown Selection Fields --- */
 .select-wrapper select {
   width: 100%;
   padding: 12px 40px 12px 16px;
@@ -199,17 +193,15 @@ body {
   font-size: 14px;
 }
 
-/* --- Interactive Hover State --- */
 .select-wrapper select:hover {
   border-color: var(--border-hover);
   background-color: var(--surface);
 }
 
-/* --- Active Focus Glow State --- */
 .select-wrapper select:focus {
   background-color: var(--surface);
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-shadow); /* Soft purple outer ring */
+  box-shadow: 0 0 0 4px var(--accent-shadow);
 }
 
 .quiz-number {
@@ -323,7 +315,6 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
-/* HTML: <div class="loader"></div> */
 .loading {
   display: flex;
   flex-direction: column;
@@ -366,23 +357,20 @@ input::-webkit-inner-spin-button {
 
 /* --- Mobile Responsiveness Media Query --- */
 @media (max-width: 768px) {
-  /* 1. Expand input rows and quiz previews to take full width with comfortable side padding */
   .text-input-row,
   .quiz-preview-box {
     width: 90%;
-    min-width: 0; /* Prevents overflow clipping bugs on ultra-small screens */
+    min-width: 0;
     margin: 16px auto;
     padding: 16px;
   }
 
-  /* 2. Optimize the preference card sizing for small displays */
   .preference-settings {
     max-width: 90%;
     margin: 20px auto;
     padding: 20px;
   }
 
-  /* 3. Fix structural overlap issues for custom select wrapper layout arrow markers */
   .select-wrapper #first-dropdown {
     right: 14px;
     top: 50%;
@@ -391,11 +379,10 @@ input::-webkit-inner-spin-button {
 
   .select-wrapper #second-dropdown {
     right: 14px;
-    top: 50%; /* Adjusted from 60% so it aligns dead-center inside its block */
+    top: 50%;
     transform: translateY(-50%);
   }
 
-  /* 4. Improve font readability and click targets for fingers on mobile screens */
   .quiz-preview-box h3 {
     font-size: 1.25rem;
   }
@@ -409,6 +396,6 @@ input::-webkit-inner-spin-button {
   .quiz-number,
   .quiz-type {
     font-size: 15px;
-    padding: 10px 36px 10px 14px; /* Slightly tighter padding for finger taps */
+    padding: 10px 36px 10px 14px;
   }
 }

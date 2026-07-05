@@ -1,76 +1,93 @@
+// URL PARAMETERS
+// Extract quiz ID and data source from URL
 const urlParams = new URLSearchParams(window.location.search);
 const quizId = urlParams.get("id");
 const source = urlParams.get("source") || "local";
+// Safety check for missing quiz ID
 if (!quizId) {
   console.error("No Quiz Id found in the page link layout!");
 }
 
-// Pull text string out and turn it back into an object
-let questions = [];
-let currentIdx = 0;
-let userSelections = [];
-let music = "";
+// DOM SELECTORS
+// Frequently used DOM elements
+const el = {
+  questionTxt: document.getElementById("question-text"),
+  optionsBox: document.getElementById("options-container"),
+  progressText: document.getElementById("progress-text"),
+  progressFill: document.getElementById("progress-bar-fill"),
+  feedbackBox: document.getElementById("feedback-panel"),
+  feedbackStatus: document.getElementById("feedback-status"),
+  feedbackExplain: document.getElementById("feedback-explanation"),
+  prevBtn: document.getElementById("prev-btn"),
+  nextBtn: document.getElementById("next-btn"),
+  saveBtn: document.querySelector(".save-btn"),
+  retakeBtn: document.querySelector(".retake"),
+  quizActiveBox: document.getElementById("quiz-active-box"),
+  resultsBox: document.getElementById("quiz-results-box"),
+  timer: document.getElementById("timer"),
+  timerContainer: document.getElementById("timer-container"),
+  audio: document.getElementById("audio"),
+  audioSource: document.getElementById("audio-source"),
+};
 
-// DOM Selectors
-const questionTxt = document.getElementById("question-text");
-const optionsBox = document.getElementById("options-container");
-const progressText = document.getElementById("progress-text");
-const progressFill = document.getElementById("progress-bar-fill");
-const feedbackBox = document.getElementById("feedback-panel");
-const feedbackStatus = document.getElementById("feedback-status");
-const feedbackExplain = document.getElementById("feedback-explanation");
-const prevBtn = document.getElementById("prev-btn");
-const nextBtn = document.getElementById("next-btn");
-const quizActiveBox = document.getElementById("quiz-active-box");
-const resultsBox = document.getElementById("quiz-results-box");
-const saveBtn = document.querySelector(".save-btn");
-const retakeBtn = document.querySelector(".retake");
-const timer = document.getElementById("timer");
-const timerContainer = document.getElementById("timer-container");
-const audio = document.getElementById("audio");
-const audioSource = document.getElementById("audio-source");
-let timerInterval = null;
-let timeLeft = 30;
-let time = 30;
+// APPLICATION STATE
+const state = {
+  questions: [], // quiz questions array
+  currentIdx: 0, // current question index
+  userSelections: [], // user answers per question
+  music: "", // background music file name
+  time: 30, // time per question (default 30s)
+  timeLeft: 30, // countdown timer value
+  timerInterval: null, // interval reference for timer
+};
 
+// INITIALIZE QUIZ
+// Fetch quiz data from DB or localStorage and initialize state
 async function initQuiz() {
   try {
     if (source === "db") {
+      // Load quiz from backend database
       const res = await fetch(`/fetchingMongoDBdata/${quizId}`);
       if (!res.ok) throw new Error("Failed to retrieve quiz data from server.");
       const data = await res.json();
-      questions = data.questions || [];
-      time = data.time || 30;
-      music = data.music || "";
-      console.log(music);
+      state.questions = data.questions || [];
+      state.time = data.time || 30;
+      state.music = data.music || "";
+      console.log(state.music);
     } else {
+      // Load quiz from localStorage
       const rawData = JSON.parse(localStorage.getItem(`QuestionSuit${quizId}`));
-      music = urlParams.get("music") || "";
-      console.log(music);
-      questions = rawData?.questions || rawData || [];
-      time = rawData.time || 30;
+      state.music = urlParams.get("music") || "";
+      state.questions = rawData?.questions || rawData || [];
+      state.time = rawData.time || 30;
     }
 
-    if (!questions || questions.length === 0) {
+    // Validate quiz data
+    if (!state.questions || state.questions.length === 0) {
       throw new Error("No questions found for this quiz record configuration.");
     }
 
-    userSelections = new Array(questions.length).fill(undefined);
+    // Initialize user answers array
+    state.userSelections = new Array(state.questions.length).fill(undefined);
     loadMusic();
     loadQuestion();
   } catch (error) {
     console.error("Quiz Initialization Error:", error);
-    questionTxt.innerText = "Error loading quiz data. Please try again.";
+    el.questionTxt.innerText = "Error loading quiz data. Please try again.";
   }
 }
 
+// BACKGROUND MUSIC
 function loadMusic() {
-  audioSource.setAttribute("src", `/bg music/${encodeURIComponent(music)}.mp3`);
-  audio.load();
-  audio.addEventListener(
+  el.audioSource.setAttribute(
+    "src",
+    `/bg music/${encodeURIComponent(state.music)}.mp3`,
+  );
+  el.audio.load();
+  el.audio.addEventListener(
     "canplay",
     () => {
-      playPromise = audio.play();
+      playPromise = el.audio.play();
       if (playPromise !== undefined) {
         playPromise.catch((error) => {
           // Catch block prevents console crashes from browser security blockades
@@ -82,59 +99,78 @@ function loadMusic() {
   );
 }
 
+// QUESTION LOADING FLOW
 function loadQuestion() {
+  const q = state.questions[state.currentIdx];
   stopTimer();
-  timeLeft = time;
-  const q = questions[currentIdx];
+  resetTimer();
+  renderQuestion(q);
+  renderOption(q);
+  renderProgress();
 
-  // 1. Render layout details & progress
-  progressText.innerText = `Question ${currentIdx + 1} of ${questions.length}`;
-  progressFill.style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
-  questionTxt.innerText = q.question;
-  optionsBox.innerHTML = "";
-
-  // Reset control visibility states
-  feedbackBox.className = "hidden";
-  nextBtn.classList.add("hidden");
-  if (currentIdx === 0) {
-    prevBtn.disabled = true;
-    prevBtn.classList.add("disabled");
-  } else {
-    prevBtn.disabled = false;
-    prevBtn.classList.remove("disabled");
-  }
-
-  // 2. Generate button selections
-  q.options.forEach((opt, index) => {
-    const btn = document.createElement("button");
-    btn.className = "option-item notranslate";
-    btn.innerText = opt;
-    btn.onclick = () => selectOption(index);
-    optionsBox.appendChild(btn);
-  });
-
-  // 3. Keep state integrity: If user has previously answered this question, visually display it
-  if (userSelections[currentIdx] !== undefined) {
-    showFeedback(userSelections[currentIdx]);
+  // If already answered, show feedback instead of restarting timer
+  if (state.userSelections[state.currentIdx] !== undefined) {
+    showFeedback(state.userSelections[state.currentIdx]);
   } else {
     startTimer();
   }
 }
 
+// RENDER QUESTION UI
+function renderQuestion(q) {
+  // 1. Render layout details & progress
+  el.questionTxt.innerText = q.question;
+  el.optionsBox.innerHTML = "";
+
+  // Reset control visibility states
+  el.feedbackBox.className = "hidden";
+  el.nextBtn.classList.add("hidden");
+
+  // Handle previous button state
+  if (state.currentIdx === 0) {
+    el.prevBtn.disabled = true;
+    el.prevBtn.classList.add("disabled");
+  } else {
+    el.prevBtn.disabled = false;
+    el.prevBtn.classList.remove("disabled");
+  }
+}
+
+// RENDER OPTIONS
+function renderOption(q) {
+  q.options.forEach((opt, index) => {
+    const btn = document.createElement("button");
+    btn.className = "option-item notranslate";
+    btn.innerText = opt;
+    // Handle option selection
+    btn.onclick = () => selectOption(index);
+    el.optionsBox.appendChild(btn);
+  });
+}
+
+// PROGRESS BAR
+function renderProgress() {
+  el.progressText.innerText = `Question ${state.currentIdx + 1} of ${state.questions.length}`;
+
+  el.progressFill.style.width = `${((state.currentIdx + 1) / state.questions.length) * 100}%`;
+}
+
+// USER ANSWER HANDLING
 function selectOption(selectedIndex) {
   // Store user selection choice
-  userSelections[currentIdx] = selectedIndex;
+  state.userSelections[state.currentIdx] = selectedIndex;
   showFeedback(selectedIndex);
 }
 
+// FEEDBACK SYSTEM
 function showFeedback(selectedIndex) {
   stopTimer();
-  const q = questions[currentIdx];
-  const optionButtons = optionsBox.querySelectorAll(".option-item");
+  const q = state.questions[state.currentIdx];
+  const optionButtons = el.optionsBox.querySelectorAll(".option-item");
 
   // Disable all options so they cannot click multiple times
   optionButtons.forEach((btn, idx) => {
-    btn.setAttribute("disabled", "true");
+    btn.disabled = true;
     // Highlight correct choice green
     if (idx === q.answer) btn.classList.add("correct");
     // Highlight chosen selection red if it was wrong
@@ -142,61 +178,53 @@ function showFeedback(selectedIndex) {
       btn.classList.add("incorrect");
   });
 
-  // Configure content inside explanation box panel
-  feedbackBox.className = ""; // Remove hidden class
-  if (selectedIndex === q.answer) {
-    feedbackStatus.innerText = "✅ Correct!";
-    feedbackBox.className = "correct-style";
-  } else {
-    feedbackStatus.innerText = "❌ Incorrect";
-    feedbackBox.className = "incorrect-style";
-  }
-  feedbackExplain.innerHTML = `<strong>Explanation:</strong> <span class="exp"></span>`;
-  feedbackExplain.querySelector(".exp").innerText = `${q.explanation}`;
+  renderFeedbackPanel(q, selectedIndex);
+  updateNextButton();
+}
 
-  // Show step button progress route
-  nextBtn.classList.remove("hidden");
-  if (currentIdx === questions.length - 1) {
-    nextBtn.innerText = "View Final Summary";
+// FEEDBACK PANEL UI
+function renderFeedbackPanel(q, selectedIndex) {
+  // Configure content inside explanation box panel
+  el.feedbackBox.className = ""; // Remove hidden class
+  if (selectedIndex === q.answer) {
+    el.feedbackStatus.innerText = "✅ Correct!";
+    el.feedbackBox.className = "correct-style";
   } else {
-    nextBtn.innerText = "Next Question";
+    el.feedbackStatus.innerText = "❌ Incorrect";
+    el.feedbackBox.className = "incorrect-style";
+  }
+  el.feedbackExplain.innerHTML = `<strong>Explanation:</strong> <span class="exp"></span>`;
+  el.feedbackExplain.querySelector(".exp").innerText = `${q.explanation}`;
+}
+
+// NEXT BUTTON STATE
+function updateNextButton() {
+  el.nextBtn.classList.remove("hidden");
+  if (state.currentIdx === state.questions.length - 1) {
+    el.nextBtn.innerText = "View Final Summary";
+  } else {
+    el.nextBtn.innerText = "Next Question";
   }
 }
 
-// Navigation event handlers
-nextBtn.onclick = () => {
-  if (currentIdx < questions.length - 1) {
-    currentIdx++;
-    loadQuestion();
-  } else {
-    stopTimer();
-    showFinalResults();
-  }
-};
-
-prevBtn.onclick = () => {
-  if (currentIdx > 0) {
-    currentIdx--;
-    loadQuestion();
-  }
-};
-
+// FINAL RESULTS SCREEN
 function showFinalResults() {
   if (source === "db") {
-    saveBtn.classList.add("hidden");
+    el.saveBtn.classList.add("hidden");
   } else {
-    saveBtn.classList.remove("hidden");
+    el.saveBtn.classList.remove("hidden");
   }
 
-  quizActiveBox.classList.add("hidden");
-  resultsBox.classList.remove("hidden");
+  el.quizActiveBox.classList.add("hidden");
+  el.resultsBox.classList.remove("hidden");
 
   let totalCorrect = 0;
   const summaryContainer = document.getElementById("summary-cards-container");
   summaryContainer.innerHTML = "";
 
-  questions.forEach((q, idx) => {
-    const chosenIdx = userSelections[idx];
+  // Build result cards for each question
+  state.questions.forEach((q, idx) => {
+    const chosenIdx = state.userSelections[idx];
     const isCorrect = chosenIdx === q.answer;
     if (isCorrect) totalCorrect++;
 
@@ -223,19 +251,21 @@ function showFinalResults() {
 
   document.getElementById("score-summary").innerHTML = `
         <h3 style="font-size:24px; color:hsl(261deg 80% 48%);">
-            You scored ${totalCorrect} out of ${questions.length}!
+            You scored ${totalCorrect} out of ${state.questions.length}!
         </h3>
     `;
 }
 
+// RETAKE QUIZ
 function retake() {
-  userSelections = new Array(questions.length).fill(undefined);
-  currentIdx = 0;
-  quizActiveBox.classList.remove("hidden");
-  resultsBox.classList.add("hidden");
+  state.userSelections = new Array(state.questions.length).fill(undefined);
+  state.currentIdx = 0;
+  el.quizActiveBox.classList.remove("hidden");
+  el.resultsBox.classList.add("hidden");
   loadQuestion();
 }
 
+// SAVE QUIZ TO DATABASE
 async function saveQuiz() {
   const overlayBox = document.getElementById("overlay");
   const quizName = document.getElementById("quiz-name");
@@ -244,10 +274,12 @@ async function saveQuiz() {
   const warningText = document.getElementById("warning-text");
   overlayBox.classList.add("show");
 
+  // Cancel button
   cancelBtn.onclick = () => {
     overlayBox.classList.remove("show");
   };
 
+  // Confirm save
   confirmBtn.onclick = async (e) => {
     e.preventDefault();
     if (quizName.value.trim().length === 0) {
@@ -261,9 +293,9 @@ async function saveQuiz() {
 
     const payload = {
       title: quizName.value,
-      time: time,
-      questions: questions,
-      music: music,
+      time: state.time,
+      questions: state.questions,
+      music: state.music,
     };
 
     try {
@@ -287,25 +319,49 @@ async function saveQuiz() {
   };
 }
 
+// TIMER SYSTEM
+function resetTimer() {
+  state.timeLeft = state.time;
+}
+
 function startTimer() {
+  stopTimer();
   updateTimerDisplay();
-  timerInterval = setInterval(() => {
-    timeLeft--;
+  state.timerInterval = setInterval(() => {
+    state.timeLeft--;
     updateTimerDisplay();
-    if (timeLeft <= 5) timerContainer.classList.add("warning");
-    if (timeLeft <= 0) selectOption("skipped");
+    if (state.timeLeft <= 5) el.timerContainer.classList.add("warning");
+    if (state.timeLeft <= 0) selectOption("skipped");
   }, 1000);
 }
 
 function stopTimer() {
-  clearInterval(timerInterval);
-  timerInterval = null;
-  timerContainer.classList.remove("warning");
+  clearInterval(state.timerInterval);
+  state.timerInterval = null;
+  el.timerContainer.classList.remove("warning");
 }
 
 function updateTimerDisplay() {
-  timer.textContent = `${timeLeft}s`;
+  el.timer.textContent = `${state.timeLeft}s`;
 }
+
+// NAVIGATION BUTTONS
+el.nextBtn.onclick = () => {
+  if (state.currentIdx < state.questions.length - 1) {
+    state.currentIdx++;
+    loadQuestion();
+  } else {
+    stopTimer();
+    showFinalResults();
+  }
+};
+
+el.prevBtn.onclick = () => {
+  if (state.currentIdx > 0) {
+    state.currentIdx--;
+    loadQuestion();
+  }
+};
 
 // Kick off initialization logic
 initQuiz();

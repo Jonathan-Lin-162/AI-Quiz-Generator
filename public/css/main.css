@@ -4,10 +4,8 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   LIGHT THEME
-========================= */
 :root {
+  /* Light mode */
   --bg: #f8f9fa;
   --surface: #ffffff;
   --surface-2: #f4f6f9;
@@ -29,10 +27,8 @@
   --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
 }
 
-/* =========================
-   DARK THEME
-========================= */
 body.dark-mode {
+  /* Dark mode */
   --bg: #0f1115;
   --surface: #181b22;
   --surface-2: #14161b;
@@ -54,9 +50,6 @@ body.dark-mode {
   --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
 }
 
-/* =========================
-   GLOBAL
-========================= */
 body {
   background-color: var(--bg);
   background-image: radial-gradient(
@@ -70,9 +63,6 @@ body {
   color: var(--text);
 }
 
-/* =========================
-   LAYOUT
-========================= */
 .welcome-container {
   max-width: 900px;
   margin: 60px auto;
@@ -86,18 +76,12 @@ h1 {
   color: var(--text);
 }
 
-/* =========================
-   SUBTITLE
-========================= */
 .subtitle {
   color: var(--text-secondary);
   font-size: 1.1rem;
   margin-bottom: 30px;
 }
 
-/* =========================
-   FEATURE GRID
-========================= */
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -119,16 +103,10 @@ h1 {
   border-color: var(--accent);
 }
 
-/* =========================
-   CTA BUTTON
-========================= */
 .cta-form {
   margin-top: 20px;
 }
 
-/* =========================
-   BUTTON
-========================= */
 .cssbuttons-io-button {
   margin: auto;
   background: var(--btn-bg);
@@ -154,7 +132,6 @@ h1 {
   transform: translateY(-2px);
 }
 
-/* ICON */
 .cssbuttons-io-button .icon {
   background: var(--btn-text);
   margin-left: 1em;
