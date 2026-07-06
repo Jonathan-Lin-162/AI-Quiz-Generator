@@ -1,6 +1,6 @@
 const geminiService = require("../services/geminiService");
 const shuffleArray = require("../utils/shuffleArray");
-const Quiz = require("../models/quiz");
+const Quiz = require("../models/Quiz");
 
 exports.quizGenerate = async (req, res) => {
   try {

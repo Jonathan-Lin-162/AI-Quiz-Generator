@@ -1,5 +1,5 @@
 // LOAD UTILITIES
-require("./utils.js");
+require("./utils/helpers.js");
 
 // IMPORT DEPENDENCIES
 const express = require("express");
