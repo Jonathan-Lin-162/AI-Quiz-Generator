@@ -118,7 +118,7 @@ The application will be available at:
 ```text
 http://localhost:3000
 ```
----
+
 ## Project Structure
 
 ```text
@@ -211,7 +211,6 @@ AI-QUIZ-GENERATOR
         ├── footer.ejs
         └── header.ejs
 ```
----
 
 ## How It Works 📚
 
