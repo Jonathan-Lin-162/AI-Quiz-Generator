@@ -241,7 +241,6 @@ AI-QUIZ-GENERATOR
 
 ## Screenshots
 
-```markdown
 <table>
   <tr>
     <td align="center"><b>Home Page</b></td>
@@ -261,8 +260,6 @@ AI-QUIZ-GENERATOR
     <td><img src="PASTE_YOUR_FOURTH_IMAGE_URL_HERE" width="300" alt="Saved quizzes" /></td>
   </tr>
 </table>
-
-```
 
 ---
 
