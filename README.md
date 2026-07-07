@@ -247,16 +247,16 @@ AI-QUIZ-GENERATOR
     <td align="center"><b>Quiz Generation</b></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/e3d3fea4-02d8-4271-93bd-8a5ca7d42797" width="300" alt="Home page" /></td>
-    <td><img src="https://github.com/user-attachments/assets/e3aee3ec-85ae-474f-ac80-6fa67aed3336" width="300" alt="Quiz Generation page" /></td>
+    <td><img src="https://github.com/user-attachments/assets/b44412e4-e1b4-45b5-adb3-44cd5182dd16" width="300" alt="Home page" /></td>
+    <td><img src="https://github.com/user-attachments/assets/6be93b4b-c805-42b1-b275-afc707d4c2b8" width="300" alt="Quiz Generation page" /></td>
   </tr>
   <tr>
     <td align="center"><b>Quiz Interface</b></td>
     <td align="center"><b>Saved Quizzes</b></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/7b74a768-9300-4454-9893-4edecc496b59" width="300" alt="Quiz Interface" /></td>
-    <td><img src="https://github.com/user-attachments/assets/69dbc165-863f-4269-8cbf-1643e0876104" width="300" alt="Saved Quizzes" /></td>
+    <td><img src="https://github.com/user-attachments/assets/1aaa3e89-da6d-4652-80cd-4c41ee042085" width="300" alt="Quiz Interface" /></td>
+    <td><img src="https://github.com/user-attachments/assets/fd76f1c8-962b-433b-8c05-5b397cf20e63" width="300" alt="Saved Quizzes" /></td>
   </tr>
 </table>
 
