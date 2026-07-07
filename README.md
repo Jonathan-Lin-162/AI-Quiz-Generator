@@ -263,5 +263,6 @@ AI-QUIZ-GENERATOR
 ---
 ## Contact Information
 Jonathan Lin - ylin297@my.bcit.ca
+
 ---
 Built with ❤️ to help students learn faster and smarter.
