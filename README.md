@@ -241,14 +241,27 @@ AI-QUIZ-GENERATOR
 
 ## Screenshots
 
-```markdown<img width="316" height="682" alt="Screenshot 2026-07-05 at 1 03 18 AM" src="https://github.com/user-attachments/assets/25bfd0e6-ed1b-40cb-9c55-79f7f7bdf07d" />
-Home page
-<img width="315" height="682" alt="Screenshot 2026-07-05 at 1 09 42 AM" src="https://github.com/user-attachments/assets/e3aee3ec-85ae-474f-ac80-6fa67aed3336" />
-Quiz generation page
-<img width="318" height="685" alt="Screenshot 2026-07-05 at 1 10 37 AM" src="https://github.com/user-attachments/assets/7b74a768-9300-4454-9893-4edecc496b59" />
-Quiz interface
-<img width="315" height="682" alt="Screenshot 2026-07-05 at 1 12 43 AM" src="https://github.com/user-attachments/assets/69dbc165-863f-4269-8cbf-1643e0876104" />
-Saved quizzes
+```markdown
+<table>
+  <tr>
+    <td align="center"><b>Home Page</b></td>
+    <td align="center"><b>Quiz Generation</b></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/e3aee3ec-85ae-474f-ac80-6fa67aed3336" width="300" alt="Home page" /></td>
+    <td><img src="https://github.com/user-attachments/assets/7b74a768-9300-4454-9893-4edecc496b59" width="300" alt="Quiz generation page" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Quiz Interface</b></td>
+    <td align="center"><b>Saved Quizzes</b></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/69dbc165-863f-4269-8cbf-1643e0876104" width="300" alt="Quiz interface" /></td>
+    <!-- Paste your 4th image URL inside the src attribute below -->
+    <td><img src="PASTE_YOUR_FOURTH_IMAGE_URL_HERE" width="300" alt="Saved quizzes" /></td>
+  </tr>
+</table>
+
 ```
 
 ---
