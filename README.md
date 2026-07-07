@@ -120,10 +120,13 @@ http://localhost:3000
 ```
 ---
 ## Project Structure
+
+```text
 AI-QUIZ-GENERATOR
 │
 ├── app.js
 ├── package.json
+├── package-lock.json
 ├── README.md
 ├── .env
 ├── .gitignore
@@ -156,20 +159,20 @@ AI-QUIZ-GENERATOR
 │   └── signupSchema.js
 │
 ├── utils
-│   └── helpers.js
-|   └── displayMessage.js
-|   └── shuffleArray.js
+│   ├── helpers.js
+│   ├── displayMessage.js
+│   └── shuffleArray.js
 │
 ├── public
 │   ├── css
 │   │   ├── create.css
-|   |   ├── footer.css
-|   |   ├── header.css
+│   │   ├── footer.css
+│   │   ├── header.css
 │   │   ├── home.css
-|   |   ├── index.css
+│   │   ├── index.css
 │   │   ├── loginSignup.css
 │   │   ├── main.css
-|   |   ├── message.css
+│   │   ├── message.css
 │   │   ├── myQuizzes.css
 │   │   └── renderQuiz.css
 │   │
@@ -186,12 +189,12 @@ AI-QUIZ-GENERATOR
 │   │
 │   └── bg-music
 │       ├── All In - Everet Almond.mp3
-│       └── Comedy Music.mp3
-│       └── Quiz Background Loop.mp3
-│       └── Quiz Countdown.mp3
-│       └── Quiz Evaluation Loop.mp3
-│       └── Quiz Master.mp3
-│       └── Quiz Music.mp3
+│       ├── Comedy Music.mp3
+│       ├── Quiz Background Loop.mp3
+│       ├── Quiz Countdown.mp3
+│       ├── Quiz Evaluation Loop.mp3
+│       ├── Quiz Master.mp3
+│       ├── Quiz Music.mp3
 │       └── Sergio's Magic Dustbin.mp3
 │
 └── views
@@ -207,6 +210,7 @@ AI-QUIZ-GENERATOR
     └── partials
         ├── footer.ejs
         └── header.ejs
+```
 ---
 
 ## How It Works 📚
