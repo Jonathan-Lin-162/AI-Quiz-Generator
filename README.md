@@ -247,17 +247,16 @@ AI-QUIZ-GENERATOR
     <td align="center"><b>Quiz Generation</b></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/e3aee3ec-85ae-474f-ac80-6fa67aed3336" width="300" alt="Home page" /></td>
-    <td><img src="https://github.com/user-attachments/assets/7b74a768-9300-4454-9893-4edecc496b59" width="300" alt="Quiz generation page" /></td>
+    <td><img src="https://github.com/user-attachments/assets/e3d3fea4-02d8-4271-93bd-8a5ca7d42797" width="300" alt="Home page" /></td>
+    <td><img src="https://github.com/user-attachments/assets/e3aee3ec-85ae-474f-ac80-6fa67aed3336" width="300" alt="Quiz Generation page" /></td>
   </tr>
   <tr>
     <td align="center"><b>Quiz Interface</b></td>
     <td align="center"><b>Saved Quizzes</b></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/69dbc165-863f-4269-8cbf-1643e0876104" width="300" alt="Quiz interface" /></td>
-    <!-- Paste your 4th image URL inside the src attribute below -->
-    <td><img src="PASTE_YOUR_FOURTH_IMAGE_URL_HERE" width="300" alt="Saved quizzes" /></td>
+    <td><img src="https://github.com/user-attachments/assets/7b74a768-9300-4454-9893-4edecc496b59" width="300" alt="Quiz Interface" /></td>
+    <td><img src="https://github.com/user-attachments/assets/69dbc165-863f-4269-8cbf-1643e0876104" width="300" alt="Saved Quizzes" /></td>
   </tr>
 </table>
 
