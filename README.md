@@ -229,7 +229,6 @@ AI-QUIZ-GENERATOR
 
 ## Future Improvements
 
-* PDF and document uploads.
 * Flashcard generation.
 * User statistics and learning analytics.
 * Quiz sharing with friends.
