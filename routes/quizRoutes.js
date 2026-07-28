@@ -18,4 +18,10 @@ router.post("/editingQuiz", requireAuth, quizController.editingQuiz);
 
 router.post("/deletingQuiz", requireAuth, quizController.deletingQuiz);
 
+router.post(
+  "/extractPdf",
+  quizController.upload.single("pdf"),
+  quizController.extractPdf,
+);
+
 module.exports = router;

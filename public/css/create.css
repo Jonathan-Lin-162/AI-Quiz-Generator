@@ -67,6 +67,7 @@ body {
 .text-input {
   flex: 1;
   border: 1.5px solid var(--border);
+  min-height: 21px;
   border-radius: 22px;
   color: var(--text);
   padding: 9px 16px;
@@ -115,6 +116,76 @@ body {
   background: var(--disabled);
   box-shadow: none;
   cursor: not-allowed;
+}
+
+.attach-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--surface-2);
+  color: var(--icon);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.attach-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--surface);
+}
+
+.attach-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.attached-file {
+  width: 50%;
+  min-width: 320px;
+  margin: -8px auto 50px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.attached-file i.fa-file-pdf {
+  color: var(--accent);
+}
+
+.attached-file span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attached-file button {
+  border: none;
+  background: none;
+  color: var(--icon);
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.attached-file button:hover {
+  color: var(--accent);
+}
+
+.attached-file.hidden {
+  display: none;
 }
 
 .preference-settings {
@@ -363,6 +434,11 @@ input::-webkit-inner-spin-button {
     min-width: 0;
     margin: 16px auto;
     padding: 16px;
+  }
+
+  .attached-file {
+    width: 90%;
+    min-width: 0;
   }
 
   .preference-settings {

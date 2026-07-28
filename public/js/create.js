@@ -9,6 +9,11 @@ const loading = document.getElementById("loading");
 const bgMusic = document.getElementById("bg-music");
 const audio = document.getElementById("audio");
 const audioSource = document.getElementById("audio-source");
+const attachBtn = document.getElementById("attachBtn");
+const pdfInput = document.getElementById("pdfInput");
+const attachedFile = document.getElementById("attachedFile");
+const attachedFileName = document.getElementById("attachedFileName");
+const removeAttachedFile = document.getElementById("removeAttachedFile");
 
 // Difficulty explanation mapping used for prompt generation
 const difficultyLevel = {
@@ -21,6 +26,7 @@ const difficultyLevel = {
 let quizArray = []; // All generated questions across sessions
 let quizID = 0; // Incremental ID for each generated quiz
 let selectedMusic = ""; // Currently selected background music
+let pdfData = "";
 
 // CHAT INPUT HANDLER
 // Allows Enter key to trigger quiz generation (Shift+Enter = new line)
@@ -37,6 +43,43 @@ function autogrow(el) {
   el.style.height = "auto";
   el.style.height = Math.min(el.scrollHeight, 96) + "px";
 }
+
+attachBtn.addEventListener("click", () => pdfInput.click());
+
+pdfInput.addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  attachBtn.disabled = true;
+  attachedFileName.textContent = `Reading ${file.name}...`;
+  attachedFile.classList.remove("hidden");
+
+  try {
+    const formData = new FormData();
+    formData.append("pdf", file);
+
+    const res = await fetch("/extractPdf", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await res.json();
+
+    if (!data.text) throw new Error("Empty response");
+
+    pdfData = data.text;
+    attachedFileName.textContent = file.name;
+  } catch (err) {
+    console.error("PDF read failed:", err);
+    attachedFileName.textContent = "Couldn't read that PDF";
+  } finally {
+    attachBtn.disabled = false;
+  }
+});
+
+removeAttachedFile.addEventListener("click", () => {
+  pdfInput.value = "";
+  attachedFile.classList.add("hidden");
+});
 
 // AUDIO HELPERS
 // Stop current audio playback and reset source
@@ -149,6 +192,7 @@ async function generateQuiz() {
   5. Do not include markdown formatting tags (like \`\`\`json) or any conversational text before or after the JSON payload string.
 
   Study Material: ${text}
+  PDF Content: ${pdfData}
   Difficulty Level: ${difficulty}
   Number of Quizzes: ${quizNumber}
   Question Type Setting: ${questionType}
