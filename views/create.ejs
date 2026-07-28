@@ -72,15 +72,26 @@
 </div>
 
 <div class="text-input-row">
+    <button class="attach-btn" id="attachBtn" title="Attach PDF" type="button">
+        <i class="fa-solid fa-paperclip"></i>
+    </button>
+    <input type="file" id="pdfInput" accept="application/pdf" hidden>
+
     <textarea
           class="text-input"
           id="textInput"
           rows="1"
-          placeholder="Any topic you want to generate quiz"
+          placeholder="Enter the topic for quiz"
           onkeydown="handleChatKey(event)"
           oninput="autogrow(this)"
     ></textarea>
     <button class="text-send-btn" id="textSentBtn" onclick="generateQuiz()">➤</button>
+</div>
+
+<div class="attached-file hidden" id="attachedFile">
+    <i class="fa-solid fa-file-pdf"></i>
+    <span id="attachedFileName"></span>
+    <button id="removeAttachedFile" title="Remove">&times;</button>
 </div>
 <audio controls class="audio" id="audio">
   <source id="audio-source" src="" type="audio/ogg">

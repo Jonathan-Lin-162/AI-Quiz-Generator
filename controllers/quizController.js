@@ -1,6 +1,9 @@
 const geminiService = require("../services/geminiService");
 const shuffleArray = require("../utils/shuffleArray");
 const Quiz = require("../models/Quiz");
+const multer = require("multer");
+const pdfParse = require("pdf-parse");
+const upload = multer(); // memory storage, no disk writes
 
 exports.quizGenerate = async (req, res) => {
   try {
@@ -188,3 +191,15 @@ exports.deletingQuiz = async (req, res) => {
       .json({ success: false, error: "Internal server processing error." });
   }
 };
+
+exports.extractPdf = async (req, res) => {
+  try {
+    const data = await pdfParse(req.file.buffer);
+    res.json({ text: data.text.trim() });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to read PDF" });
+  }
+};
+
+exports.upload = upload;
