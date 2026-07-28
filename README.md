@@ -247,8 +247,9 @@ AI-QUIZ-GENERATOR
   </tr>
   <tr>
     <td><img src="https://github.com/user-attachments/assets/b44412e4-e1b4-45b5-adb3-44cd5182dd16" width="300" alt="Home page" /></td>
-    <td><img src="https://github.com/user-attachments/assets/e5f190ee-78ca-40b4-883e-4fa8f928679e" width="300" alt="Quiz Generation page" /></td>
+    <td><img src="https://github.com/user-attachments/assets/242cd5e5-0667-44c4-a1b4-4210adb39083" width="300" alt="Quiz Generation page" /></td>
   </tr>
+
 
   <tr>
     <td align="center"><b>Quiz Interface</b></td>
